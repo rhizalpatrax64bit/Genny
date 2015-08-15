@@ -1,0 +1,21 @@
+﻿{
+  "version": "0.2.0",
+  "description": "Dnx.Genny test console",
+  "authors": [ "Muchiachio" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "Dnx.Genny": ""
+  },
+
+  "commands": {
+    "Dnx.Genny.Console": "Dnx.Genny.Console",
+    "gen": "Dnx.Genny"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+  }
+}

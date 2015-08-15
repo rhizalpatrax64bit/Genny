@@ -1,0 +1,23 @@
+﻿{
+  "projectUrl": "https://github.com/Muchiachio/DNX.Genny",
+  "licenseUrl": "http://opensource.org/licenses/MIT",
+  "description": "Dnx.Genny, the DNX scaffolder",
+  "tags": [ "dnx scaffolding C#" ],
+  "authors": [ "Muchiachio" ],
+  "version": "0.2.0",
+
+  "dependencies": {
+    "Microsoft.AspNet.Razor": "4.0.0-beta6",
+    "Microsoft.CodeAnalysis.Common": "1.0.0",
+    "Microsoft.AspNet.Mvc.Razor": "6.0.0-beta6",
+    "Microsoft.Framework.Runtime.Abstractions": "1.0.0-beta6"
+  },
+
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Reflection": "4.0.0.0"
+      }
+    }
+  }
+}
