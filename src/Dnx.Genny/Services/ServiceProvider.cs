@@ -33,5 +33,13 @@ namespace Dnx.Genny.Services
 
             return Provider.GetService(serviceType);
         }
+        public TService GetService<TService>() where TService : class
+        {
+            Object instance;
+            if (Instances.TryGetValue(typeof(TService), out instance))
+                return (TService)instance;
+
+            return (TService)Provider.GetService(typeof(TService));
+        }
     }
 }
