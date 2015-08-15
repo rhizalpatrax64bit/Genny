@@ -46,6 +46,7 @@ namespace Dnx.Genny
                         Console.WriteLine($"Running genny module: {module.Name + Environment.NewLine}");
 
                         gennyModule.Scaffolder = ServiceProvider.GetService<IScaffolder>();
+                        gennyModule.ServiceProvider = ServiceProvider;
                         gennyModule.Run();
                         break;
                     default:

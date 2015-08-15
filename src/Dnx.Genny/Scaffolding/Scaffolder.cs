@@ -18,6 +18,10 @@ namespace Dnx.Genny.Scaffolding
             Compiler = compiler;
         }
 
+        public ScaffoldingResult Scaffold(String template)
+        {
+            return Scaffold<Object>(template, null);
+        }
         public ScaffoldingResult Scaffold<TModel>(String template, TModel model)
         {
             RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost<TModel>());

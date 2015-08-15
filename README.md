@@ -1,44 +1,116 @@
-Code scaffolder for DNX projects.
+Code generator for DNX projects.
 
 This project is currently in development.
 
-### Usage
+# Installation
+
 Locate the commands section in `project.json` and add the gen command:
+
 ```JSON
 "commands": {
   "gen": "Dnx.Genny"
 }
 ```
 
-Implement `IGennyModule`:
+# Default usage
+
+Implement `GennyModuleBase`
+
+```C#
+using Dnx.Genny.Templating;
+
+namespace Project.GennyModules.Default
+{
+    public class DefaultModule : GennyModuleBase
+    {
+    }
+}
+```
+
+Which scaffolds templates from module's folder
+```
+Project
+├── README.md                           <----- Unrelated project files
+├── ...
+├── ...
+├── ...   
+│
+└───GennyModules
+    ├───Default                         <----- Default module folder
+    │   ├── MainFolder                  <----- Default module template's folder
+    │   │   └── DefaultClass.cs.cshtml  <----- Default module template
+    │   │
+    │   ├── DefaultHelper.cs.cshtml     <----- Default module template
+    |   └── DefaultModule.cs            <----- Default module class
+    │   
+    ├───Advanced                        <----- Other unrelated modules
+    │   ├── AdvancedClass.cs.cshtml
+    │   │   ...
+```
+
+Run your module from command line, by navigating to the project directory and running
+
+```
+dnx . gen default
+```
+
+Which results in project structure
+```
+Project
+├── README.md
+├── ...
+├── ...
+├── ...
+|
+├── MainFolder
+│   └── DefaultClass.cs
+├── DefaultHelper.cs
+|
+└───GennyModules
+    ├─── ...
+    ├─── ...
+    |
+```
+
+# Advanced usage
+
+Implement `IGennyModule`
+
 ```C#
 using System;
 using System.Linq;
 using Dnx.Genny.Templating;
 using Dnx.Genny.Scaffolding;
 
-public class MyGennyModule : IGennyModule
+namespace Project.GennyModules.Advanced
 {
-    public IScaffolder Scaffolder { get; set; }
-
-    public void Run()
+    public class MyGennyModule : IGennyModule
     {
-        ScaffoldingResult result = Scaffolder.Scaffold(@"My razor content: @Model", "o/");
+        public ServiceProvider ServiceProvider { get; set; }
+        public IScaffolder Scaffolder { get; set; }
 
-        if (result.Errors.Any())
+        public void Run()
         {
-            Console.WriteLine("Failed to scaffold:");
-            foreach (String error in result.Errors)
-                Console.WriteLine("  - " + error);
-        }
-        else
-        {
-            Console.WriteLine(result.Content);
-            // Write content to file or any other source.
+            ScaffoldingResult result = Scaffolder.Scaffold(@"My razor content: @Model", "o/");
+
+            if (result.Errors.Any())
+            {
+                Console.WriteLine("Failed to scaffold:");
+                foreach (String error in result.Errors)
+                    Console.WriteLine("  - " + error);
+            }
+            else
+            {
+                Console.WriteLine(result.Content);
+                // Write content to file or any other source.
+            }
         }
     }
 }
 ```
 
-Run your module from command line, by navigating to the project directory and run:
-`dnx . gen my-genny-module`
+Run your module from command line, by navigating to the project directory and running
+
+```
+dnx . gen my-genny-module
+```
