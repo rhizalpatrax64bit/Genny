@@ -5,7 +5,6 @@ using Microsoft.Framework.Runtime;
 using Microsoft.Framework.Runtime.Compilation;
 using Microsoft.Framework.Runtime.Roslyn;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,14 +17,12 @@ namespace Dnx.Genny.Compilation
         private IAssemblyLoadContext Loader { get; }
         private ILibraryManager LibraryManager { get; }
         private IApplicationEnvironment Environment { get; }
-        private static ConcurrentDictionary<String, AssemblyMetadata> FileCache { get; set; }
 
-        public GennyCompiler(IApplicationEnvironment env, IAssemblyLoadContextAccessor accessor, ILibraryManager libraryManager)
+        public GennyCompiler(IApplicationEnvironment environment, IAssemblyLoadContextAccessor accessor, ILibraryManager manager)
         {
-            FileCache = FileCache ?? new ConcurrentDictionary<String, AssemblyMetadata>();
             Loader = accessor.GetLoadContext(typeof(GennyCompiler).GetTypeInfo().Assembly);
-            LibraryManager = libraryManager;
-            Environment = env;
+            Environment = environment;
+            LibraryManager = manager;
         }
 
         public CompilationResult Compile(String code)
@@ -90,7 +87,7 @@ namespace Dnx.Genny.Compilation
                 }
             }
 
-            throw new NotSupportedException();
+            throw new NotSupportedException("Not supported reference.");
         }
     }
 }

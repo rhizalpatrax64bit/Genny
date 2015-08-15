@@ -1,5 +1,4 @@
 ﻿using Dnx.Genny.Scaffolding;
-using Dnx.Genny.Services;
 using Microsoft.Framework.Runtime;
 using System;
 using System.IO;
@@ -9,20 +8,25 @@ namespace Dnx.Genny.Templating
 {
     public abstract class GennyModuleBase : IGennyModule
     {
-        public ServiceProvider ServiceProvider { get; set; }
-        public IScaffolder Scaffolder { get; set; }
+        protected IGennyScaffolder Scaffolder { get; set; }
+        protected IApplicationEnvironment Environment { get; set; }
+
+        public GennyModuleBase(IApplicationEnvironment environment, IGennyScaffolder scaffolder)
+        {
+            Environment = environment;
+            Scaffolder = scaffolder;
+        }
 
         public virtual void Run()
         {
-            IApplicationEnvironment environment = ServiceProvider.GetService<IApplicationEnvironment>();
-            String moduleRoot = GetModuleRoot(environment);
+            String moduleRoot = GetModuleRoot();
             if (moduleRoot == null) return;
 
             String[] templates = Directory.GetFiles(moduleRoot, "*.cshtml", SearchOption.AllDirectories);
 
             foreach (String template in templates)
             {
-                String templatePath = environment.ApplicationBasePath + template.Replace(moduleRoot, "");
+                String templatePath = Environment.ApplicationBasePath + template.Replace(moduleRoot, "");
                 ScaffoldingResult result = Scaffolder.Scaffold(File.ReadAllText(template));
                 templatePath = templatePath.Remove(templatePath.Length - 7);
 
@@ -47,9 +51,9 @@ namespace Dnx.Genny.Templating
             }
         }
 
-        private String GetModuleRoot(IApplicationEnvironment environment)
+        private String GetModuleRoot()
         {
-            String appRoot = environment.ApplicationBasePath;
+            String appRoot = Environment.ApplicationBasePath;
             String module = GetType().Name + ".cs";
 
             String[] files = Directory.GetFiles(appRoot, module, SearchOption.AllDirectories);

@@ -9,11 +9,11 @@ using System.Linq;
 
 namespace Dnx.Genny.Scaffolding
 {
-    public class Scaffolder : IScaffolder
+    public class GennyScaffolder : IGennyScaffolder
     {
         private IGennyCompiler Compiler { get; }
 
-        public Scaffolder(IGennyCompiler compiler)
+        public GennyScaffolder(IGennyCompiler compiler)
         {
             Compiler = compiler;
         }

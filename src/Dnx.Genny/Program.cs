@@ -17,72 +17,72 @@ namespace Dnx.Genny
         {
             ServiceProvider = new ServiceProvider(serviceProvider);
 
-            ServiceProvider.Add<IGennyModuleLocator, GennyModuleLocator>();
             ServiceProvider.Add<IGennyCompiler, GennyCompiler>();
-            ServiceProvider.Add<IScaffolder, Scaffolder>();
+            ServiceProvider.Add<IGennyScaffolder, GennyScaffolder>();
+            ServiceProvider.Add<IGennyModuleLocator, GennyModuleLocator>();
         }
 
         public void Main(String[] args)
         {
-            if (args == null || args.Length == 0 || IsHelpArgument(args[0]))
+            if (ShouldShowHelp(args))
             {
                 ShowHelp();
+                ShowAvailableModules();
             }
             else
             {
                 IGennyModuleLocator locator = ServiceProvider.GetService<IGennyModuleLocator>();
-                IEnumerable<GennyModuleDescription> descriptions = locator.Find(args[0]);
-                GennyModuleDescription module = descriptions.FirstOrDefault();
-                Int32 descriptionCount = descriptions.Count();
+                IEnumerable<GennyModuleDescriptor> descriptors = locator.Find(args[0]);
+                GennyModuleDescriptor descriptor = descriptors.FirstOrDefault();
+                Int32 descriptorCount = descriptors.Count();
 
-                switch(descriptionCount)
+                switch(descriptorCount)
                 {
                     case 0:
                         Console.WriteLine($"Could not find a genny module named: {args[0] + Environment.NewLine}");
                         ShowAvailableModules();
+
                         break;
                     case 1:
-                        IGennyModule gennyModule = ActivatorUtilities.CreateInstance(ServiceProvider, module.Type) as IGennyModule;
-                        Console.WriteLine($"Running genny module: {module.Name + Environment.NewLine}");
+                        IGennyModule module = ActivatorUtilities.CreateInstance(ServiceProvider, descriptor.Type) as IGennyModule;
+                        Console.WriteLine($"Scaffolding genny module: {descriptor.Name + Environment.NewLine}");
+                        module.Run();
 
-                        gennyModule.Scaffolder = ServiceProvider.GetService<IScaffolder>();
-                        gennyModule.ServiceProvider = ServiceProvider;
-                        gennyModule.Run();
                         break;
                     default:
-                        Console.WriteLine($"Found more than one genny modules named: {args[0] + Environment.NewLine}");
+                        Console.WriteLine($"Found more than one genny module named: {args[0] + Environment.NewLine}");
                         ShowAvailableModules();
+
                         break;
                 }
             }
         }
 
+        private Boolean ShouldShowHelp(String[] args)
+        {
+            return args == null || args.Length == 0 ||
+                new[] { "?", "-?", "-h", "-help", "--?", "--h", "--help" }
+                    .Any(helpArg => String.Equals(args[0], helpArg, StringComparison.OrdinalIgnoreCase));
+        }
         private void ShowAvailableModules()
         {
             IGennyModuleLocator locator = ServiceProvider.GetService<IGennyModuleLocator>();
-            IEnumerable<GennyModuleDescription> descriptions = locator.FindAll();
+            IEnumerable<GennyModuleDescriptor> descriptors = locator.FindAll();
 
-            if (descriptions.Any())
+            if (descriptors.Any())
             {
                 Console.WriteLine("Available genny modules:");
-                foreach (GennyModuleDescription description in descriptions)
-                    Console.WriteLine("    " + description.Name + " - " + (description.Comments ?? "{No description}"));
+                foreach (GennyModuleDescriptor descriptor in descriptors)
+                    Console.WriteLine($"    {descriptor.Name} - {descriptor.Description ?? "{No description}"}");
             }
             else
             {
                 Console.WriteLine("There are no genny modules installed!");
             }
         }
-
-        private Boolean IsHelpArgument(String arg)
-        {
-            return new[] { "?", "-?", "-h", "-help", "--?", "--h", "--help" }
-                .Any(helpArg => String.Equals(helpArg, arg, StringComparison.OrdinalIgnoreCase));
-        }
         private void ShowHelp()
         {
             Console.WriteLine("Usage: dnx . <genny command name> <genny module name>");
-            ShowAvailableModules();
         }
     }
 }

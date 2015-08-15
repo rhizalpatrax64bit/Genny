@@ -16,7 +16,7 @@ namespace Dnx.Genny.Templating
             ApplicationName = environment.ApplicationName;
         }
 
-        public IEnumerable<GennyModuleDescription> FindAll()
+        public IEnumerable<GennyModuleDescriptor> FindAll()
         {
             return Assembly
                 .Load(new AssemblyName(ApplicationName))
@@ -24,15 +24,15 @@ namespace Dnx.Genny.Templating
                 .Where(type =>
                     typeof(IGennyModule).IsAssignableFrom(type))
                 .Select(type =>
-                    new GennyModuleDescription
+                    new GennyModuleDescriptor
                     {
                         Type = type,
                         Name = ToKebabCase(type.Name)
                     })
-                .OrderBy(description =>
-                    description.Name);
+                .OrderBy(descriptor =>
+                    descriptor.Name);
         }
-        public IEnumerable<GennyModuleDescription> Find(String moduleName)
+        public IEnumerable<GennyModuleDescriptor> Find(String moduleName)
         {
             return Assembly
                 .Load(new AssemblyName(ApplicationName))
@@ -42,13 +42,13 @@ namespace Dnx.Genny.Templating
                     (String.Equals(type.Name, moduleName, StringComparison.OrdinalIgnoreCase) ||
                     String.Equals(ToKebabCase(type.Name), moduleName, StringComparison.OrdinalIgnoreCase)))
                 .Select(type =>
-                    new GennyModuleDescription
+                    new GennyModuleDescriptor
                     {
                         Type = type,
                         Name = ToKebabCase(type.Name)
                     })
-                .OrderBy(description =>
-                    description.Name);
+                .OrderBy(descriptor =>
+                    descriptor.Name);
         }
 
         private String ToKebabCase(String typeName)

@@ -18,11 +18,17 @@ Implement `GennyModuleBase`
 
 ```C#
 using Dnx.Genny.Templating;
+using Dnx.Genny.Scaffolding;
+using Microsoft.Framework.Runtime;
 
 namespace Project.GennyModules.Default
 {
     public class DefaultModule : GennyModuleBase
     {
+        public DefaultModule(IApplicationEnvironment environment, IGennyScaffolder scaffolder)
+            : base(environment, scaffolder)
+        {
+        }
     }
 }
 ```
@@ -86,8 +92,12 @@ namespace Project.GennyModules.Advanced
 {
     public class MyGennyModule : IGennyModule
     {
-        public ServiceProvider ServiceProvider { get; set; }
-        public IScaffolder Scaffolder { get; set; }
+        public IGennyScaffolder Scaffolder { get; set; }
+
+        public MyGennyModule(IGennyScaffolder scaffolder)
+        {
+            Scaffolder = scaffolder;
+        }
 
         public void Run()
         {
