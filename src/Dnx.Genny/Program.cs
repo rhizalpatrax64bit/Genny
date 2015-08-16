@@ -8,15 +8,19 @@ namespace Dnx.Genny
 {
     public class Program
     {
+        private IGennyLogger Logger { get; }
         private ServiceProvider ServiceProvider { get; }
 
         public Program(IServiceProvider serviceProvider)
         {
             ServiceProvider = new ServiceProvider(serviceProvider);
 
+            ServiceProvider.Add<IGennyLogger, GennyLogger>();
             ServiceProvider.Add<IGennyCompiler, GennyCompiler>();
             ServiceProvider.Add<IGennyScaffolder, GennyScaffolder>();
             ServiceProvider.Add<IGennyModuleLocator, GennyModuleLocator>();
+
+            Logger = ServiceProvider.GetService<IGennyLogger>();
         }
 
         public void Main(String[] args)
@@ -36,7 +40,7 @@ namespace Dnx.Genny
                 switch(descriptorCount)
                 {
                     case 0:
-                        Console.WriteLine($"Could not find a genny module named: {args[0] + Environment.NewLine}");
+                        Logger.Write($"Could not find a genny module named: {args[0]}");
                         ShowAvailableModules();
 
                         break;
@@ -44,13 +48,11 @@ namespace Dnx.Genny
                         IGennyModule module = ActivatorUtilities.CreateInstance(ServiceProvider, descriptor.Type) as IGennyModule;
                         GennyCommandLineParser parser = new GennyCommandLineParser();
                         parser.ParseTo(module, args.Skip(1).ToArray());
-
-                        Console.WriteLine($"Scaffolding genny module: {descriptor.Name + Environment.NewLine}");
                         module.Run();
 
                         break;
                     default:
-                        Console.WriteLine($"Found more than one genny module named: {args[0] + Environment.NewLine}");
+                        Logger.Write($"Found more than one genny module named: {args[0]}");
                         ShowAvailableModules();
 
                         break;
@@ -71,18 +73,18 @@ namespace Dnx.Genny
 
             if (descriptors.Any())
             {
-                Console.WriteLine("Available genny modules:");
+                Logger.Write("Available genny modules:");
                 foreach (GennyModuleDescriptor descriptor in descriptors)
-                    Console.WriteLine($"    {descriptor.Name} - {descriptor.Description ?? "{No description}"}");
+                    Logger.Write($"    {descriptor.Name} - {descriptor.Description ?? "{No description}"}");
             }
             else
             {
-                Console.WriteLine("There are no genny modules installed!");
+                Logger.Write("There are no genny modules installed!");
             }
         }
         private void ShowHelp()
         {
-            Console.WriteLine("Usage: dnx . <genny command name> <genny module name>");
+            Logger.Write("Usage: dnx . <genny command name> <genny module name>");
         }
     }
 }

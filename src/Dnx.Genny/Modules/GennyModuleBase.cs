@@ -1,4 +1,5 @@
-﻿using Microsoft.Framework.Runtime;
+﻿using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,14 +9,16 @@ namespace Dnx.Genny
 {
     public abstract class GennyModuleBase : IGennyModule
     {
-        private String ModuleRoot { get; }
-        protected IGennyScaffolder Scaffolder { get; set; }
         protected IApplicationEnvironment Environment { get; set; }
+        protected IGennyScaffolder Scaffolder { get; set; }
+        protected IGennyLogger Logger { get; }
+        private String ModuleRoot { get; }
 
-        public GennyModuleBase(IApplicationEnvironment environment, IGennyScaffolder scaffolder)
+        public GennyModuleBase(IServiceProvider provider)
         {
-            Scaffolder = scaffolder;
-            Environment = environment;
+            Environment = provider.GetService<IApplicationEnvironment>();
+            Scaffolder = provider.GetService<IGennyScaffolder>();
+            Logger = provider.GetService<IGennyLogger>();
             ModuleRoot = GetModuleRoot();
         }
 
@@ -30,9 +33,8 @@ namespace Dnx.Genny
             String[] templates = Directory.GetFiles(ModuleRoot, "*.cshtml", SearchOption.AllDirectories);
             Dictionary<String, ScaffoldingResult> results = Scaffold(templates, model);
 
-            Console.WriteLine();
             if (results.Any(result => result.Value.Errors.Any()))
-                ConsoleWriteLine(ConsoleColor.Red, "Scaffolding failed! Rolling back...");
+                Logger.Write("Scaffolding failed! Rolling back...");
             else
                 Write(results);
         }
@@ -42,17 +44,16 @@ namespace Dnx.Genny
             Dictionary<String, ScaffoldingResult> results = new Dictionary<String, ScaffoldingResult>();
             foreach (String template in templates)
             {
-                Console.Write(template);
                 ScaffoldingResult result = Scaffolder.Scaffold(File.ReadAllText(template), model);
                 if (result.Errors.Any())
                 {
-                    ConsoleWriteLine(ConsoleColor.Red, " - Failed");
+                    Logger.Write($"{template} - Failed");
                     foreach (String error in result.Errors)
-                        Console.WriteLine($"  - {error}");
+                        Logger.Write($"  - {error}");
                 }
                 else
                 {
-                    ConsoleWriteLine(ConsoleColor.Green, " - Succeeded");
+                    Logger.Write($"{template} - Succeeded");
                 }
 
                 results.Add(template, result);
@@ -74,21 +75,11 @@ namespace Dnx.Genny
                 }
                 else
                 {
-                    ConsoleWriteLine(ConsoleColor.Yellow, $"{templatePath} already exists, skipping!");
+                    Logger.Write($"{templatePath} already exists, skipping!");
                 }
             }
 
-            ConsoleWriteLine(ConsoleColor.Green, "Scaffolded successfully!");
-        }
-
-        private void ConsoleWriteLine(ConsoleColor color, String text)
-        {
-            ConsoleColor currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = color;
-
-            Console.WriteLine(text);
-
-            Console.ForegroundColor = currentColor;
+            Logger.Write("Scaffolded successfully!");
         }
         private String GetModuleRoot()
         {

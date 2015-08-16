@@ -1,7 +1,6 @@
-﻿using Microsoft.Framework.Runtime;
-using System;
+﻿using System;
 
-namespace Dnx.Genny.Console.Modules
+namespace Dnx.Genny.Modules
 {
     public class StringModule : GennyModuleBase
     {
@@ -14,8 +13,8 @@ namespace Dnx.Genny.Console.Modules
         [GennyParameter("namespace", "n")]
         public String NameSpace { get; set; }
 
-        public StringModule(IApplicationEnvironment environment, IGennyScaffolder scaffolder)
-            : base(environment, scaffolder)
+        public StringModule(IServiceProvider provider)
+            : base(provider)
         {
         }
     }

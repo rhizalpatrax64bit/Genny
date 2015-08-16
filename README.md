@@ -33,8 +33,8 @@ namespace Project.GennyModules.Default
 
     public class DefaultModule : GennyModuleBase
     {
-        public DefaultModule(IApplicationEnvironment environment, IGennyScaffolder scaffolder)
-            : base(environment, scaffolder)
+        public DefaultModule(IServiceProvider provider)
+            : base(provider)
         {
         }
     }
@@ -112,14 +112,11 @@ namespace Project.GennyModules.Advanced
 
             if (result.Errors.Any())
             {
-                Console.WriteLine("Failed to scaffold:");
-                foreach (String error in result.Errors)
-                    Console.WriteLine("  - " + error);
+                // Failed to scaffold, write out error or do nothing
             }
             else
             {
-                Console.WriteLine(result.Content);
-                // Write content to file or any other source.
+                // Write result.Content to file or any other source.
             }
         }
     }
