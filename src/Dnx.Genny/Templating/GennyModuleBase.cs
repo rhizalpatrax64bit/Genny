@@ -19,6 +19,10 @@ namespace Dnx.Genny.Templating
 
         public virtual void Run()
         {
+            Run(this);
+        }
+        protected void Run(dynamic model)
+        {
             String moduleRoot = GetModuleRoot();
             if (moduleRoot == null) return;
 
@@ -27,7 +31,7 @@ namespace Dnx.Genny.Templating
             foreach (String template in templates)
             {
                 String templatePath = Environment.ApplicationBasePath + template.Replace(moduleRoot, "");
-                ScaffoldingResult result = Scaffolder.Scaffold(File.ReadAllText(template), this);
+                ScaffoldingResult result = Scaffolder.Scaffold(File.ReadAllText(template), model);
                 templatePath = templatePath.Remove(templatePath.Length - 7);
 
                 if (result.Errors.Any())
