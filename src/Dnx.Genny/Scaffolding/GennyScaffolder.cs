@@ -22,7 +22,7 @@ namespace Dnx.Genny.Scaffolding
         {
             return Scaffold(template, null);
         }
-        public ScaffoldingResult Scaffold(String template, dynamic model)
+        public ScaffoldingResult Scaffold(String template, Object model)
         {
             RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost());
             using (StringReader input = new StringReader(template))
