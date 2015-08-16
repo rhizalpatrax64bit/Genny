@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dnx.Genny.Templating
+namespace Dnx.Genny
 {
     public class GennyModuleDescriptor
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dnx.Genny.Scaffolding
+namespace Dnx.Genny
 {
     public interface IGennyScaffolder
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Dnx.Genny.Templating
+namespace Dnx.Genny
 {
     public class GennyModuleLocator : IGennyModuleLocator
     {

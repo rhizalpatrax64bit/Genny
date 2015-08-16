@@ -17,9 +17,7 @@ Locate the commands section in `project.json` and add the gen command:
 Implement `GennyModuleBase`
 
 ```C#
-using Dnx.Genny.Templating;
-using Dnx.Genny.CommandLine;
-using Dnx.Genny.Scaffolding;
+using Dnx.Genny;
 using Microsoft.Framework.Runtime;
 
 namespace Project.GennyModules.Default
@@ -94,9 +92,8 @@ Implement `IGennyModule`
 
 ```C#
 using System;
+using Dnx.Genny;
 using System.Linq;
-using Dnx.Genny.Templating;
-using Dnx.Genny.Scaffolding;
 
 namespace Project.GennyModules.Advanced
 {

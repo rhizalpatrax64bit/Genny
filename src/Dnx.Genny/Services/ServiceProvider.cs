@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Dnx.Genny.Services
+namespace Dnx.Genny
 {
     public class ServiceProvider : IServiceProvider
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dnx.Genny.CommandLine
+namespace Dnx.Genny
 {
     [Serializable]
     internal class GennyCommandLineException : Exception

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dnx.Genny.Compilation
+namespace Dnx.Genny
 {
     public interface IGennyCompiler
     {

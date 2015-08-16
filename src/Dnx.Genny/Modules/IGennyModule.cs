@@ -1,4 +1,4 @@
-﻿namespace Dnx.Genny.Templating
+﻿namespace Dnx.Genny
 {
     public interface IGennyModule
     {

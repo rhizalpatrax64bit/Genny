@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Dnx.Genny.Scaffolding
+namespace Dnx.Genny
 {
     public class ScaffoldingResult
     {

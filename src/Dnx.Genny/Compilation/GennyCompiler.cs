@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Dnx.Genny.Compilation
+namespace Dnx.Genny
 {
     public class GennyCompiler : IGennyCompiler
     {

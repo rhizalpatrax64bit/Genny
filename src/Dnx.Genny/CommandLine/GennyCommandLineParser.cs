@@ -1,10 +1,9 @@
-﻿using Dnx.Genny.Templating;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Dnx.Genny.CommandLine
+namespace Dnx.Genny
 {
     public class GennyCommandLineParser
     {

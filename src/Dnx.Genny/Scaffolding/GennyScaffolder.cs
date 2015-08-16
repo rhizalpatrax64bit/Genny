@@ -1,13 +1,11 @@
-﻿using Dnx.Genny.Compilation;
-using Dnx.Genny.Templating;
-using Microsoft.AspNet.Razor;
+﻿using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.CodeGenerators;
 using Microsoft.CodeAnalysis;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace Dnx.Genny.Scaffolding
+namespace Dnx.Genny
 {
     public class GennyScaffolder : IGennyScaffolder
     {

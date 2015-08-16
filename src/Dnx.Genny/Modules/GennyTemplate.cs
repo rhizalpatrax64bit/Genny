@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Dnx.Genny.Templating
+namespace Dnx.Genny
 {
     public abstract class GennyTemplate<TModel>
     {

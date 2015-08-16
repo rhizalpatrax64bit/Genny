@@ -1,11 +1,10 @@
-﻿using Dnx.Genny.Scaffolding;
-using Microsoft.Framework.Runtime;
+﻿using Microsoft.Framework.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Dnx.Genny.Templating
+namespace Dnx.Genny
 {
     public abstract class GennyModuleBase : IGennyModule
     {

@@ -1,9 +1,4 @@
-﻿using Dnx.Genny.CommandLine;
-using Dnx.Genny.Compilation;
-using Dnx.Genny.Scaffolding;
-using Dnx.Genny.Services;
-using Dnx.Genny.Templating;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.Framework.DependencyInjection;
 using System;
 using System.Collections.Generic;

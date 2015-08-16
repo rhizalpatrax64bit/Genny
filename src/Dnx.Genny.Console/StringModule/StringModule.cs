@@ -1,7 +1,4 @@
-﻿using Dnx.Genny.CommandLine;
-using Dnx.Genny.Scaffolding;
-using Dnx.Genny.Templating;
-using Microsoft.Framework.Runtime;
+﻿using Microsoft.Framework.Runtime;
 using System;
 
 namespace Dnx.Genny.Console.Modules

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dnx.Genny.CommandLine
+namespace Dnx.Genny
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class GennySwitchAttribute : Attribute
