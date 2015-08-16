@@ -27,7 +27,7 @@ namespace Dnx.Genny.Templating
             foreach (String template in templates)
             {
                 String templatePath = Environment.ApplicationBasePath + template.Replace(moduleRoot, "");
-                ScaffoldingResult result = Scaffolder.Scaffold(File.ReadAllText(template));
+                ScaffoldingResult result = Scaffolder.Scaffold(File.ReadAllText(template), this);
                 templatePath = templatePath.Remove(templatePath.Length - 7);
 
                 if (result.Errors.Any())

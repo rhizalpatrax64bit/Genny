@@ -13,7 +13,7 @@ namespace Dnx.Genny.Console
 
         public void Main()
         {
-            new Genny.Program(ServiceProvider).Main(new[] { "string-module" });
+            new Genny.Program(ServiceProvider).Main(new[] { "string-module", "StringMain", "EmptyMethod", "-n", "Dnx.Genny.Console.Controls" });
         }
     }
 }

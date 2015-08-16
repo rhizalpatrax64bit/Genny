@@ -1,7 +1,9 @@
-﻿using Dnx.Genny.Compilation;
+﻿using Dnx.Genny.CommandLine;
+using Dnx.Genny.Compilation;
 using Dnx.Genny.Scaffolding;
 using Dnx.Genny.Services;
 using Dnx.Genny.Templating;
+using Microsoft.CodeAnalysis;
 using Microsoft.Framework.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -45,6 +47,9 @@ namespace Dnx.Genny
                         break;
                     case 1:
                         IGennyModule module = ActivatorUtilities.CreateInstance(ServiceProvider, descriptor.Type) as IGennyModule;
+                        GennyCommandLineParser parser = new GennyCommandLineParser();
+                        parser.ParseTo(module, args.Skip(1).ToArray());
+
                         Console.WriteLine($"Scaffolding genny module: {descriptor.Name + Environment.NewLine}");
                         module.Run();
 

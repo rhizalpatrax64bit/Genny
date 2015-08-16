@@ -1,10 +1,7 @@
 ﻿{
-  "version": "0.2.0",
   "description": "Dnx.Genny test console",
   "authors": [ "Muchiachio" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "version": "0.3.0",
 
   "dependencies": {
     "Dnx.Genny": ""

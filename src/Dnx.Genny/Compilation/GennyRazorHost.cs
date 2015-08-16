@@ -3,12 +3,12 @@ using Microsoft.AspNet.Razor.CodeGenerators;
 
 namespace Dnx.Genny.Compilation
 {
-    public class GennyRazorHost<TModel> : RazorEngineHost
+    public class GennyRazorHost : RazorEngineHost
     {
         public GennyRazorHost() : base(new CSharpRazorCodeLanguage())
         {
             DefaultNamespace = "Dnx.Genny.Templates";
-            DefaultBaseClass = $"Dnx.Genny.Templating.GennyTemplate<{typeof(TModel).FullName}>";
+            DefaultBaseClass = $"Dnx.Genny.Templating.GennyTemplate<dynamic>";
             GeneratedClassContext = new GeneratedClassContext("ExecuteAsync", "Write", "WriteLiteral", new GeneratedTagHelperContext());
 
             NamespaceImports.Add("System");

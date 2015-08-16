@@ -1,8 +1,8 @@
-﻿@{<text>namespace Dnx.Genny.Console.Controls
+﻿@{<text>namespace @(Model.NameSpace ?? "Dnx.Genny.Console")
 {
-    public class StringMain
+    public class @Model.ClassName
     {
-        public static void WriteEmpty()
+        public static void @(Model.MethodName)()
         {
             System.Console.WriteLine("");
         }

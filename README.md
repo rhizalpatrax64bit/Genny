@@ -18,11 +18,21 @@ Implement `GennyModuleBase`
 
 ```C#
 using Dnx.Genny.Templating;
+using Dnx.Genny.CommandLine;
 using Dnx.Genny.Scaffolding;
 using Microsoft.Framework.Runtime;
 
 namespace Project.GennyModules.Default
 {
+    [GennyParameter(0, Required = true)]
+    public String ClassName { get; set; }
+
+    [GennyParameter(1, Required = true)]
+    public String MethodName { get; set; }
+
+    [GennyParameter("namespace", "n")]
+    public String NameSpace { get; set; }
+
     public class DefaultModule : GennyModuleBase
     {
         public DefaultModule(IApplicationEnvironment environment, IGennyScaffolder scaffolder)
@@ -57,7 +67,7 @@ Project
 Run your module from command line, by navigating to the project directory and running
 
 ```
-dnx . gen default
+dnx . gen default ClassName MethodName -n Namespace.Default
 ```
 
 Which results in project structure

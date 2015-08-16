@@ -20,11 +20,11 @@ namespace Dnx.Genny.Scaffolding
 
         public ScaffoldingResult Scaffold(String template)
         {
-            return Scaffold<Object>(template, null);
+            return Scaffold(template, null);
         }
-        public ScaffoldingResult Scaffold<TModel>(String template, TModel model)
+        public ScaffoldingResult Scaffold(String template, dynamic model)
         {
-            RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost<TModel>());
+            RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost());
             using (StringReader input = new StringReader(template))
             {
                 GeneratorResults results = engine.GenerateCode(input);
@@ -33,7 +33,7 @@ namespace Dnx.Genny.Scaffolding
                 CompilationResult result = Compiler.Compile(results.GeneratedCode);
                 if (result.Errors.Any()) return new ScaffoldingResult(result.Errors);
 
-                GennyTemplate<TModel> gennyTemplate = Activator.CreateInstance(result.CompiledType) as GennyTemplate<TModel>;
+                GennyTemplate<dynamic> gennyTemplate = Activator.CreateInstance(result.CompiledType) as GennyTemplate<dynamic>;
                 gennyTemplate.Model = model;
 
                 return new ScaffoldingResult(gennyTemplate.Execute());

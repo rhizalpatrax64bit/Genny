@@ -4,7 +4,7 @@
   "description": "Dnx.Genny, the DNX scaffolder",
   "tags": [ "dnx scaffolding C#" ],
   "authors": [ "Muchiachio" ],
-  "version": "0.2.0",
+  "version": "0.3.0",
 
   "dependencies": {
     "Microsoft.AspNet.Razor": "4.0.0-beta6",
