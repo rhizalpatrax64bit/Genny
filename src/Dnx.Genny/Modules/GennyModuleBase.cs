@@ -45,18 +45,25 @@ namespace Dnx.Genny
             foreach (String template in templates)
             {
                 ScaffoldingResult result = Scaffolder.Scaffold(File.ReadAllText(template), model);
+                String folderStart = template.Remove(template.Length - 7).Replace(ModuleRoot, "");
+                String templatePath = Environment.ApplicationBasePath + folderStart;
+                String projectPath = Environment.ApplicationName + folderStart;
+
                 if (result.Errors.Any())
                 {
-                    Logger.Write($"{template} - Failed");
+                    Logger.Write($"{projectPath} - Failed");
                     foreach (String error in result.Errors)
                         Logger.Write($"  - {error}");
                 }
                 else
                 {
-                    Logger.Write($"{template} - Succeeded");
+                    if (!File.Exists(templatePath))
+                        Logger.Write($"{projectPath} - Succeeded");
+                    else
+                        Logger.Write($"{projectPath} - Already exists, skipping");
                 }
 
-                results.Add(template, result);
+                results.Add(templatePath, result);
             }
 
             return results;
@@ -65,18 +72,8 @@ namespace Dnx.Genny
         {
             foreach (KeyValuePair<String, ScaffoldingResult> result in results)
             {
-                String templatePath = Environment.ApplicationBasePath + result.Key.Replace(ModuleRoot, "");
-                templatePath = templatePath.Remove(templatePath.Length - 7);
-
-                if (!File.Exists(templatePath))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(templatePath));
-                    File.WriteAllText(templatePath, result.Value.Content);
-                }
-                else
-                {
-                    Logger.Write($"{templatePath} already exists, skipping!");
-                }
+                Directory.CreateDirectory(Path.GetDirectoryName(result.Key));
+                File.WriteAllText(result.Key, result.Value.Content);
             }
 
             Logger.Write("Scaffolded successfully!");
