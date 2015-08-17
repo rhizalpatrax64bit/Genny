@@ -58,10 +58,7 @@ namespace Dnx.Genny
 
         private List<MetadataReference> GetReferences()
         {
-            String[] projects = new String[] { Environment.ApplicationName, "Dnx.Genny" };
-
-            return projects
-                .SelectMany(project => LibraryManager.GetAllExports(project).MetadataReferences)
+            return LibraryManager.GetAllExports(Environment.ApplicationName).MetadataReferences
                 .Select(reference => GetReference(reference))
                 .ToList();
         }
