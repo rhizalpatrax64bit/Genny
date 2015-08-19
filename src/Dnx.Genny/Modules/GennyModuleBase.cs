@@ -31,24 +31,15 @@ namespace Dnx.Genny
             if (ModuleRoot == null) return;
 
             String[] templates = Directory.GetFiles(ModuleRoot, "*.cshtml", SearchOption.AllDirectories);
-            Dictionary<String, ScaffoldingResult> results = Scaffold(templates, model);
+            List<ScaffoldingResult> results = new List<ScaffoldingResult>(templates.Length);
 
-            if (results.Any(result => result.Value.Errors.Any()))
-                Logger.Write("Scaffolding failed! Rolling back...");
-            else
-                Write(results);
-        }
-
-        private Dictionary<String, ScaffoldingResult> Scaffold(IEnumerable<String> templates, Object model)
-        {
-            Dictionary<String, ScaffoldingResult> results = new Dictionary<String, ScaffoldingResult>();
             foreach (String template in templates)
             {
-                ScaffoldingResult result = Scaffolder.Scaffold(File.ReadAllText(template), model);
                 String folderStart = template.Remove(template.Length - 7).Replace(ModuleRoot, "");
                 String templatePath = Environment.ApplicationBasePath + folderStart;
                 String projectPath = Environment.ApplicationName + folderStart;
 
+                ScaffoldingResult result = Scaffolder.Scaffold(templatePath, File.ReadAllText(template), model);
                 if (result.Errors.Any())
                 {
                     Logger.Write($"{projectPath} - Failed");
@@ -63,21 +54,28 @@ namespace Dnx.Genny
                         Logger.Write($"{projectPath} - Already exists, skipping");
                 }
 
-                results.Add(templatePath, result);
+                results.Add(result);
             }
 
-            return results;
-        }
-        private void Write(Dictionary<String, ScaffoldingResult> results)
-        {
-            foreach (KeyValuePair<String, ScaffoldingResult> result in results)
+            if (results.Any(result => result.Errors.Any()))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(result.Key));
-                File.WriteAllText(result.Key, result.Value.Content);
+                Logger.Write("Scaffolding failed! Rolling back...");
             }
-
-            Logger.Write("Scaffolded successfully!");
+            else
+            {
+                Write(results);
+                Logger.Write("Scaffolded successfully!");
+            }
         }
+        protected virtual void Write(List<ScaffoldingResult> results)
+        {
+            foreach (ScaffoldingResult result in results)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(result.Path));
+                File.WriteAllText(result.Path, result.Content);
+            }
+        }
+
         private String GetModuleRoot()
         {
             String appRoot = Environment.ApplicationBasePath;

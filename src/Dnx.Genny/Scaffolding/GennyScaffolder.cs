@@ -16,11 +16,11 @@ namespace Dnx.Genny
             Compiler = compiler;
         }
 
-        public ScaffoldingResult Scaffold(String template)
+        public ScaffoldingResult Scaffold(String path, String template)
         {
-            return Scaffold(template, null);
+            return Scaffold(path, template, null);
         }
-        public ScaffoldingResult Scaffold(String template, Object model)
+        public ScaffoldingResult Scaffold(String path, String template, Object model)
         {
             RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost());
             using (StringReader input = new StringReader(template))
@@ -34,7 +34,7 @@ namespace Dnx.Genny
                 GennyTemplate<dynamic> gennyTemplate = Activator.CreateInstance(result.CompiledType) as GennyTemplate<dynamic>;
                 gennyTemplate.Model = model;
 
-                return new ScaffoldingResult(gennyTemplate.Execute());
+                return new ScaffoldingResult(path, gennyTemplate.Execute());
             }
         }
     }

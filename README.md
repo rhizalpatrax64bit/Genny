@@ -108,7 +108,7 @@ namespace Project.GennyModules.Advanced
 
         public void Run()
         {
-            ScaffoldingResult result = Scaffolder.Scaffold(@"My razor content: @Model", "o/");
+            ScaffoldingResult result = Scaffolder.Scaffold("C:\ThisProject\ScaffoldedFile.cs", @"My razor content: @Model", "o/");
 
             if (result.Errors.Any())
             {
@@ -116,7 +116,8 @@ namespace Project.GennyModules.Advanced
             }
             else
             {
-                // Write result.Content to file or any other source.
+                // Write(results); // Writes each result.Content to result.Path
+                // Or write results to any other source
             }
         }
     }
