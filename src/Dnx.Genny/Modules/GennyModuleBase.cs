@@ -9,10 +9,10 @@ namespace Dnx.Genny
 {
     public abstract class GennyModuleBase : IGennyModule
     {
-        protected IApplicationEnvironment Environment { get; set; }
-        protected IGennyScaffolder Scaffolder { get; set; }
-        protected IGennyLogger Logger { get; }
         protected String ModuleRoot { get; }
+        protected IGennyLogger Logger { get; }
+        protected IGennyScaffolder Scaffolder { get; set; }
+        protected IApplicationEnvironment Environment { get; set; }
 
         public GennyModuleBase(IServiceProvider provider)
         {
@@ -50,7 +50,7 @@ namespace Dnx.Genny
                     if (!File.Exists(result.Path))
                         Logger.Write($"{shortPath} - Succeeded");
                     else
-                        Logger.Write($"{shortPath} - Already exists, skipping");
+                        Logger.Write($"{shortPath} - Already exists, skipping...");
                 }
 
                 results.Add(result);
@@ -77,10 +77,7 @@ namespace Dnx.Genny
 
         private String GetModuleRoot()
         {
-            String appRoot = Environment.ApplicationBasePath;
-            String module = GetType().Name + ".cs";
-
-            String[] files = Directory.GetFiles(appRoot, module, SearchOption.AllDirectories);
+            String[] files = Directory.GetFiles(Environment.ApplicationBasePath, GetType().Name + ".cs", SearchOption.AllDirectories);
             if (files.Length != 1) return null;
 
             return Path.GetDirectoryName(files[0]);

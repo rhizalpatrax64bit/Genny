@@ -8,7 +8,7 @@ namespace Dnx.Genny
         public GennyRazorHost() : base(new CSharpRazorCodeLanguage())
         {
             DefaultNamespace = "Dnx.Genny.Templates";
-            DefaultBaseClass = $"Dnx.Genny.GennyTemplate<dynamic>";
+            DefaultBaseClass = "Dnx.Genny.GennyTemplate<dynamic>";
             GeneratedClassContext = new GeneratedClassContext("ExecuteAsync", "Write", "WriteLiteral", new GeneratedTagHelperContext());
 
             NamespaceImports.Add("System");

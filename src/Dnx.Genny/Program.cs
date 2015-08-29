@@ -84,7 +84,7 @@ namespace Dnx.Genny
         }
         private void ShowHelp()
         {
-            Logger.Write("Usage: dnx . <genny command name> <genny module name>");
+            Logger.Write("Usage: dnx . <genny command name> <genny module name> [genny module parameters]");
         }
     }
 }

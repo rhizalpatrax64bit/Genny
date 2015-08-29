@@ -26,14 +26,14 @@ namespace Dnx.Genny
                 throw new GennyCommandLineException("Ordered genny parameters should follow incremental order: 0 1 2 3 ...");
 
             if (!HasCorrectRequiredOrder(orderedParameters))
-                throw new GennyCommandLineException("Ordered genny parameters can not have optional parameter before required one.");
+                throw new GennyCommandLineException("Ordered genny parameters can not have an optional parameter before required one.");
 
             foreach (PropertyInfo property in orderedParameters)
             {
                 GennyParameterAttribute parameter = property.GetCustomAttribute<GennyParameterAttribute>(false);
 
                 if (args.Count <= parameter.Order && parameter.Required)
-                    throw new GennyCommandLineException("Could not find parameter");
+                    throw new GennyCommandLineException($"Could not find a required parameter at position: {parameter.Order}.");
 
                 property.SetValue(module, Convert.ChangeType(args[parameter.Order.Value], property.PropertyType));
             }
