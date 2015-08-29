@@ -108,7 +108,7 @@ namespace Project.GennyModules.Advanced
 
         public void Run()
         {
-            ScaffoldingResult result = Scaffolder.Scaffold("C:\ThisProject\ScaffoldedFile.cs", @"My razor content: @Model", "o/");
+            ScaffoldingResult result = Scaffolder.Scaffold("C:\\MyProject\\MainFolder\\DefaultClass.cs.cshtml", "MyProject", "Main\\Default.cs", "Model");
 
             if (result.Errors.Any())
             {

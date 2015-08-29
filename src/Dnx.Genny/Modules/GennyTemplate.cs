@@ -6,13 +6,14 @@ namespace Dnx.Genny
 {
     public abstract class GennyTemplate<TModel>
     {
-        public TModel Model { get; set; }
+        protected TModel Model { get; set; }
         protected TextWriter Output { get; set; }
 
-        public String Execute()
+        public String Execute(TModel model)
         {
             using (StringWriter writer = new StringWriter())
             {
+                Model = model;
                 Output = writer;
                 ExecuteAsync().Wait();
 

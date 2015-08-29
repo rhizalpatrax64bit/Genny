@@ -4,7 +4,7 @@ namespace Dnx.Genny
 {
     public interface IGennyScaffolder
     {
-        ScaffoldingResult Scaffold(String path, String template);
-        ScaffoldingResult Scaffold(String path, String template, Object model);
+        ScaffoldingResult Scaffold(String template, String project, String outputPath);
+        ScaffoldingResult Scaffold(String template, String project, String outputPath, Object model);
     }
 }

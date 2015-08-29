@@ -12,7 +12,7 @@ namespace Dnx.Genny
         protected IApplicationEnvironment Environment { get; set; }
         protected IGennyScaffolder Scaffolder { get; set; }
         protected IGennyLogger Logger { get; }
-        private String ModuleRoot { get; }
+        protected String ModuleRoot { get; }
 
         public GennyModuleBase(IServiceProvider provider)
         {
@@ -35,23 +35,22 @@ namespace Dnx.Genny
 
             foreach (String template in templates)
             {
-                String folderStart = template.Remove(template.Length - 7).Replace(ModuleRoot, "");
-                String templatePath = Environment.ApplicationBasePath + folderStart;
-                String projectPath = Environment.ApplicationName + folderStart;
+                String outputPath = template.Remove(template.Length - 7).Replace(ModuleRoot, "").TrimStart('\\', '/');
+                String shortPath = Path.Combine(Environment.ApplicationName, outputPath);
 
-                ScaffoldingResult result = Scaffolder.Scaffold(templatePath, File.ReadAllText(template), model);
+                ScaffoldingResult result = Scaffolder.Scaffold(template, Environment.ApplicationName, outputPath, model);
                 if (result.Errors.Any())
                 {
-                    Logger.Write($"{projectPath} - Failed");
+                    Logger.Write($"{shortPath} - Failed");
                     foreach (String error in result.Errors)
                         Logger.Write($"  - {error}");
                 }
                 else
                 {
-                    if (!File.Exists(templatePath))
-                        Logger.Write($"{projectPath} - Succeeded");
+                    if (!File.Exists(result.Path))
+                        Logger.Write($"{shortPath} - Succeeded");
                     else
-                        Logger.Write($"{projectPath} - Already exists, skipping");
+                        Logger.Write($"{shortPath} - Already exists, skipping");
                 }
 
                 results.Add(result);
