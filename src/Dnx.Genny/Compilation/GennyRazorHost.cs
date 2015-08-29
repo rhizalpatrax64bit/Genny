@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNet.Razor;
+﻿using Microsoft.AspNet.Mvc.Razor;
+using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.CodeGenerators;
+using Microsoft.AspNet.Razor.Parser;
 
 namespace Dnx.Genny
 {
@@ -15,6 +17,11 @@ namespace Dnx.Genny
             NamespaceImports.Add("System.Linq");
             NamespaceImports.Add("System.Threading.Tasks");
             NamespaceImports.Add("System.Collections.Generic");
+        }
+
+        public override ParserBase DecorateCodeParser(ParserBase incomingCodeParser)
+        {
+            return new MvcRazorCodeParser("Dnx.Genny.GennyTemplate");
         }
     }
 }
