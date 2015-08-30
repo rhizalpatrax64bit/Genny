@@ -44,6 +44,7 @@ namespace Dnx.Genny
         {
             String path = Path.GetDirectoryName(Environment.ApplicationBasePath);
             path = Path.Combine(path, project, outputPath);
+            path = Path.GetFullPath(path);
 
             return path;
         }
