@@ -1,9 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using Microsoft.Framework.Runtime;
-using Microsoft.Framework.Runtime.Compilation;
-using Microsoft.Framework.Runtime.Roslyn;
+using Microsoft.Dnx.Compilation;
+using Microsoft.Dnx.Compilation.CSharp;
+using Microsoft.Dnx.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,14 +15,14 @@ namespace Dnx.Genny
     public class GennyCompiler : IGennyCompiler
     {
         private IAssemblyLoadContext Loader { get; }
-        private ILibraryManager LibraryManager { get; }
+        private ILibraryExporter LibraryExporter { get; }
         private IApplicationEnvironment Environment { get; }
 
-        public GennyCompiler(IApplicationEnvironment environment, IAssemblyLoadContextAccessor accessor, ILibraryManager manager)
+        public GennyCompiler(IApplicationEnvironment environment, IAssemblyLoadContextAccessor accessor, ILibraryExporter exporter)
         {
             Loader = accessor.GetLoadContext(typeof(GennyCompiler).GetTypeInfo().Assembly);
+            LibraryExporter = exporter;
             Environment = environment;
-            LibraryManager = manager;
         }
 
         public CompilationResult Compile(String code)
@@ -58,7 +58,7 @@ namespace Dnx.Genny
 
         private List<MetadataReference> GetReferences()
         {
-            return LibraryManager
+            return LibraryExporter
                 .GetAllExports(Environment.ApplicationName)
                 .MetadataReferences
                 .Select(reference => GetReference(reference))

@@ -7,7 +7,7 @@
   "version": "0.6.0",
 
   "dependencies": {
-    "Microsoft.AspNet.Mvc.Razor": "6.0.0-beta6"
+    "Microsoft.AspNet.Mvc.Razor": "6.0.0-beta7"
   },
 
   "frameworks": {

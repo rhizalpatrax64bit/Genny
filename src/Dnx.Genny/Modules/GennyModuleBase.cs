@@ -1,5 +1,5 @@
-﻿using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Runtime;
+﻿using Microsoft.Dnx.Runtime;
+using Microsoft.Framework.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
