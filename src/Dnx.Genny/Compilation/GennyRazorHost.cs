@@ -21,7 +21,7 @@ namespace Dnx.Genny
 
         public override ParserBase DecorateCodeParser(ParserBase incomingCodeParser)
         {
-            return new MvcRazorCodeParser("Dnx.Genny.GennyTemplate");
+            return new MvcRazorCodeParser();
         }
     }
 }
