@@ -7,6 +7,7 @@ namespace Dnx.Genny
     {
         public String Name { get; }
         public String ShortName { get; }
+        public String Description { get; set; }
 
         public GennySwitchAttribute(String name)
         {

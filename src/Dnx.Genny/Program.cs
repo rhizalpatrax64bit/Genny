@@ -46,9 +46,16 @@ namespace Dnx.Genny
                         break;
                     case 1:
                         IGennyModule module = ActivatorUtilities.CreateInstance(ServiceProvider, descriptor.Type) as IGennyModule;
-                        GennyCommandLineParser parser = new GennyCommandLineParser();
-                        parser.ParseTo(module, args.Skip(1).ToArray());
-                        module.Run();
+                        if (args.Length == 1 || ShouldShowHelp(args.Skip(1).ToArray()))
+                        {
+                            module.ShowHelp(Logger);
+                        }
+                        else
+                        {
+                            GennyCommandLineParser parser = new GennyCommandLineParser();
+                            parser.ParseTo(module, args.Skip(1).ToArray());
+                            module.Run();
+                        }
 
                         break;
                     default:

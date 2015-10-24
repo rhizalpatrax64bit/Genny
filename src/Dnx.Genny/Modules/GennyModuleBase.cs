@@ -26,6 +26,11 @@ namespace Dnx.Genny
         {
             Run(this);
         }
+        public virtual void ShowHelp(IGennyLogger logger)
+        {
+            logger.Write("    Help is not available for this module.");
+        }
+ 
         protected virtual void Run(Object model)
         {
             if (ModuleRoot == null) return;
