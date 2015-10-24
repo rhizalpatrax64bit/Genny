@@ -2,6 +2,7 @@
 
 namespace Dnx.Genny.Modules
 {
+    [GennyModuleDescriptor("An example module")]
     public class StringModule : GennyModuleBase
     {
         [GennyParameter(0, Required = true)]

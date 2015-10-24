@@ -27,7 +27,8 @@ namespace Dnx.Genny
                     new GennyModuleDescriptor
                     {
                         Type = type,
-                        Name = ToKebabCase(type.Name)
+                        Name = ToKebabCase(type.Name),
+                        Description = type.GetTypeInfo().GetCustomAttribute<GennyModuleDescriptorAttribute>()?.Description
                     })
                 .OrderBy(descriptor =>
                     descriptor.Name);
@@ -45,7 +46,8 @@ namespace Dnx.Genny
                     new GennyModuleDescriptor
                     {
                         Type = type,
-                        Name = ToKebabCase(type.Name)
+                        Name = ToKebabCase(type.Name),
+                        Description = type.GetTypeInfo().GetCustomAttribute<GennyModuleDescriptorAttribute>()?.Description
                     })
                 .OrderBy(descriptor =>
                     descriptor.Name);
