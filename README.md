@@ -65,7 +65,7 @@ Project
 Run your module from command line, by navigating to the project directory and running
 
 ```
-dnx . gen default ClassName MethodName -n Namespace.Default
+dnx gen default ClassName MethodName -n Namespace.Default
 ```
 
 Which results in project structure
@@ -127,5 +127,5 @@ namespace Project.GennyModules.Advanced
 Run your module from command line, by navigating to the project directory and running
 
 ```
-dnx . gen my-genny-module
+dnx gen my-genny-module
 ```

@@ -63,8 +63,7 @@ namespace Dnx.Genny
         private Boolean ShouldShowHelp(String[] args)
         {
             return args == null || args.Length == 0 ||
-                new[] { "?", "-?", "-h", "-help", "--?", "--h", "--help" }
-                    .Any(helpArg => String.Equals(args[0], helpArg, StringComparison.OrdinalIgnoreCase));
+                new[] { "?", "-?", "-h", "--help" }.Any(arg => String.Equals(args[0], arg, StringComparison.OrdinalIgnoreCase));
         }
         private void ShowAvailableModules()
         {
@@ -84,7 +83,7 @@ namespace Dnx.Genny
         }
         private void ShowHelp()
         {
-            Logger.Write("Usage: dnx . <genny command name> <genny module name> [genny module parameters]");
+            Logger.Write("Usage: dnx <genny command name> <genny module name> [genny module parameters]");
         }
     }
 }

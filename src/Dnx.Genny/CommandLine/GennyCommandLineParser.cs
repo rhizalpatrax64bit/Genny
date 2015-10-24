@@ -66,13 +66,9 @@ namespace Dnx.Genny
 
         private String GetParameterValue(GennyParameterAttribute parameter, IList<String> args)
         {
-            Int32 parameterIndex = args.IndexOf("-" + parameter.Name);
+            Int32 parameterIndex = args.IndexOf("-" + parameter.ShortName);
             if (parameterIndex < 0)
                 parameterIndex = args.IndexOf("--" + parameter.Name);
-            if (parameterIndex < 0)
-                parameterIndex = args.IndexOf("-" + parameter.ShortName);
-            if (parameterIndex < 0)
-                parameterIndex = args.IndexOf("--" + parameter.ShortName);
             if (parameterIndex < 0)
                 return null;
 
@@ -83,13 +79,9 @@ namespace Dnx.Genny
         }
         private Boolean GetSwitchValue(GennySwitchAttribute parameter, IList<String> args)
         {
-            Int32 parameterIndex = args.IndexOf("-" + parameter.Name);
+            Int32 parameterIndex = args.IndexOf("-" + parameter.ShortName);
             if (parameterIndex < 0)
                 parameterIndex = args.IndexOf("--" + parameter.Name);
-            if (parameterIndex < 0)
-                parameterIndex = args.IndexOf("-" + parameter.ShortName);
-            if (parameterIndex < 0)
-                parameterIndex = args.IndexOf("--" + parameter.ShortName);
             if (parameterIndex < 0)
                 return false;
 
