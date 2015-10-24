@@ -116,7 +116,7 @@ namespace Project.GennyModules.Advanced
             }
             else
             {
-                // Write(results); // Writes each result.Content to result.Path
+                // Write(result); // Writes result.Content to result.Path
                 // Or write results to any other source
             }
         }

@@ -66,13 +66,15 @@ namespace Dnx.Genny
                 Logger.Write("Scaffolded successfully!");
             }
         }
-        protected virtual void Write(List<ScaffoldingResult> results)
+        protected virtual void Write(ScaffoldingResult result)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(result.Path));
+            File.WriteAllText(result.Path, result.Content);
+        }
+        protected virtual void Write(IEnumerable<ScaffoldingResult> results)
         {
             foreach (ScaffoldingResult result in results)
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(result.Path));
-                File.WriteAllText(result.Path, result.Content);
-            }
+                Write(result);
         }
 
         private String GetModuleRoot()
