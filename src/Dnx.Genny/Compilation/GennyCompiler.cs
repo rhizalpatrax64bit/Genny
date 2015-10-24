@@ -62,6 +62,7 @@ namespace Dnx.Genny
                 .GetAllExports(Environment.ApplicationName)
                 .MetadataReferences
                 .Select(reference => GetReference(reference))
+                .Where(reference => reference != null)
                 .ToList();
         }
         private MetadataReference GetReference(IMetadataReference metadata)
@@ -86,7 +87,7 @@ namespace Dnx.Genny
                 }
             }
 
-            throw new NotSupportedException("Not supported reference type: " + metadata.GetType().Name);
+            return null;
         }
     }
 }
