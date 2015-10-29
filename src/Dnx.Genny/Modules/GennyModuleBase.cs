@@ -33,7 +33,12 @@ namespace Dnx.Genny
  
         protected virtual void Run(Object model)
         {
-            if (ModuleRoot == null) return;
+            if (ModuleRoot == null)
+            {
+                Logger.Write("Module root folder was not found, aborting...");
+
+                return;
+            }
 
             String[] templates = Directory.GetFiles(ModuleRoot, "*.cshtml", SearchOption.AllDirectories);
             List<ScaffoldingResult> results = new List<ScaffoldingResult>(templates.Length);
