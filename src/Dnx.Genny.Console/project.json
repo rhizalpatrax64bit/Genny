@@ -7,6 +7,10 @@
     "Dnx.Genny": ""
   },
 
+  "compilationOptions": {
+    "warningsAsErrors": true
+  },
+
   "commands": {
     "Dnx.Genny.Console": "Dnx.Genny.Console",
     "gen": "Dnx.Genny"
