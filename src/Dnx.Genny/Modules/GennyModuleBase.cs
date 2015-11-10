@@ -14,7 +14,7 @@ namespace Dnx.Genny
         protected IGennyScaffolder Scaffolder { get; set; }
         protected IApplicationEnvironment Environment { get; set; }
 
-        public GennyModuleBase(IServiceProvider provider)
+        protected GennyModuleBase(IServiceProvider provider)
         {
             Environment = provider.GetService<IApplicationEnvironment>();
             Scaffolder = provider.GetService<IGennyScaffolder>();

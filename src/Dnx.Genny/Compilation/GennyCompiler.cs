@@ -56,14 +56,13 @@ namespace Dnx.Genny
             }
         }
 
-        private List<MetadataReference> GetReferences()
+        private IEnumerable<MetadataReference> GetReferences()
         {
             return LibraryExporter
                 .GetAllExports(Environment.ApplicationName)
                 .MetadataReferences
-                .Select(reference => GetReference(reference))
-                .Where(reference => reference != null)
-                .ToList();
+                .Select(GetReference)
+                .Where(reference => reference != null);
         }
         private MetadataReference GetReference(IMetadataReference metadata)
         {

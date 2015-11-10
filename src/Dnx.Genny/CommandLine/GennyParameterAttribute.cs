@@ -15,7 +15,7 @@ namespace Dnx.Genny
         public GennyParameterAttribute(String name)
         {
             if (String.IsNullOrWhiteSpace(name))
-                throw new ArgumentException($"Genny parameter name should not be null or empty.");
+                throw new ArgumentException("Genny parameter name should not be null or empty.");
 
             Name = name;
         }

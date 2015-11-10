@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.CodeGenerators;
-using Microsoft.CodeAnalysis;
 using Microsoft.Dnx.Runtime;
 using System;
 using System.IO;
