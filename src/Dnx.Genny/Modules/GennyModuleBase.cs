@@ -30,7 +30,7 @@ namespace Dnx.Genny
         {
             logger.Write("    Help is not available for this module.");
         }
- 
+
         protected virtual void Run(Object model)
         {
             if (ModuleRoot == null)
@@ -41,14 +41,15 @@ namespace Dnx.Genny
             }
 
             String[] templates = Directory.GetFiles(ModuleRoot, "*.cshtml", SearchOption.AllDirectories);
-            List<ScaffoldingResult> results = new List<ScaffoldingResult>(templates.Length);
+            IDictionary<String, ScaffoldingResult> results = new Dictionary<String, ScaffoldingResult>(templates.Length);
 
             foreach (String template in templates)
             {
                 String outputPath = template.Remove(template.Length - 7).Replace(ModuleRoot, "").TrimStart('\\', '/');
+                String resultPath = FormResultPath(Environment.ApplicationName, outputPath);
                 String shortPath = Path.Combine(Environment.ApplicationName, outputPath);
 
-                ScaffoldingResult result = Scaffolder.Scaffold(template, Environment.ApplicationName, outputPath, model);
+                ScaffoldingResult result = Scaffolder.Scaffold(Read(template), model);
                 if (result.Errors.Any())
                 {
                     Logger.Write($"{shortPath} - Failed");
@@ -57,16 +58,16 @@ namespace Dnx.Genny
                 }
                 else
                 {
-                    if (!File.Exists(result.Path))
+                    if (!File.Exists(resultPath))
                         Logger.Write($"{shortPath} - Succeeded");
                     else
                         Logger.Write($"{shortPath} - Already exists, skipping...");
                 }
 
-                results.Add(result);
+                results.Add(resultPath, result);
             }
 
-            if (results.Any(result => result.Errors.Any()))
+            if (results.Any(result => result.Value.Errors.Any()))
             {
                 Logger.Write("Scaffolding failed! Rolling back...");
             }
@@ -76,17 +77,31 @@ namespace Dnx.Genny
                 Logger.Write("Scaffolded successfully!");
             }
         }
-        protected virtual void Write(ScaffoldingResult result)
+        protected virtual void Write(String path, ScaffoldingResult result)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(result.Path));
-            File.WriteAllText(result.Path, result.Content);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            File.WriteAllText(path, result.Content);
         }
-        protected virtual void Write(IEnumerable<ScaffoldingResult> results)
+        protected virtual void Write(IDictionary<String, ScaffoldingResult> results)
         {
-            foreach (ScaffoldingResult result in results)
-                Write(result);
+            foreach (KeyValuePair<String, ScaffoldingResult> result in results)
+                Write(result.Key, result.Value);
         }
 
+        private String FormResultPath(String project, String outputPath)
+        {
+            String path = Path.GetDirectoryName(Environment.ApplicationBasePath);
+            path = Path.Combine(path, project, outputPath);
+            path = Path.GetFullPath(path);
+
+            return path;
+        }
+        private String Read(String template)
+        {
+            String path = Path.Combine(Environment.ApplicationBasePath, template);
+
+            return File.ReadAllText(path);
+        }
         private String GetModuleRoot()
         {
             String[] files = Directory.GetFiles(Environment.ApplicationBasePath, GetType().Name + ".cs", SearchOption.AllDirectories);

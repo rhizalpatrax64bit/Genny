@@ -5,7 +5,6 @@ namespace Dnx.Genny
 {
     public class ScaffoldingResult
     {
-        public String Path { get; set; }
         public String Content { get; set; }
         public IEnumerable<String> Errors { get; set; }
 
@@ -13,14 +12,13 @@ namespace Dnx.Genny
         {
             Errors = new String[0];
         }
+        public ScaffoldingResult(String content) : this()
+        {
+            Content = content;
+        }
         public ScaffoldingResult(IEnumerable<String> erorrs)
         {
             Errors = erorrs ?? new String[0];
-        }
-        public ScaffoldingResult(String path, String content) : this()
-        {
-            Path = path;
-            Content = content;
         }
     }
 }
