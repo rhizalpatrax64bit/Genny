@@ -30,7 +30,7 @@ namespace Dnx.Genny
                 CompilationResult result = Compiler.Compile(results.GeneratedCode);
                 if (result.Errors.Any()) return new ScaffoldingResult(result.Errors);
 
-                GennyTemplate<T> gennyTemplate = Activator.CreateInstance(result.CompiledType) as GennyTemplate<T>;
+                GennyTemplate<dynamic> gennyTemplate = Activator.CreateInstance(result.CompiledType) as GennyTemplate<dynamic>;
 
                 return new ScaffoldingResult(gennyTemplate.Execute(model));
             }
