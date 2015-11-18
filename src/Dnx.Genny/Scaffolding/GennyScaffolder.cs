@@ -3,6 +3,7 @@ using Microsoft.AspNet.Razor.CodeGenerators;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Dnx.Genny
 {
@@ -17,9 +18,9 @@ namespace Dnx.Genny
 
         public ScaffoldingResult Scaffold(String template)
         {
-            return Scaffold<Object>(template, null);
+            return Scaffold(template, null);
         }
-        public ScaffoldingResult Scaffold<T>(String template, T model)
+        public ScaffoldingResult Scaffold(String template, Object model)
         {
             RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost());
             using (StringReader input = new StringReader(template))
@@ -30,9 +31,10 @@ namespace Dnx.Genny
                 CompilationResult result = Compiler.Compile(results.GeneratedCode);
                 if (result.Errors.Any()) return new ScaffoldingResult(result.Errors);
 
-                GennyTemplate<dynamic> gennyTemplate = Activator.CreateInstance(result.CompiledType) as GennyTemplate<dynamic>;
+                Object gennyTemplate = Activator.CreateInstance(result.CompiledType);
+                MethodInfo execute = gennyTemplate.GetType().GetMethod("Execute");
 
-                return new ScaffoldingResult(gennyTemplate.Execute(model));
+                return new ScaffoldingResult(execute.Invoke(gennyTemplate, new[] { model }) as String);
             }
         }
     }

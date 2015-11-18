@@ -5,6 +5,6 @@ namespace Dnx.Genny
     public interface IGennyScaffolder
     {
         ScaffoldingResult Scaffold(String template);
-        ScaffoldingResult Scaffold<T>(String template, T model);
+        ScaffoldingResult Scaffold(String template, Object model);
     }
 }
