@@ -1,5 +1,4 @@
-﻿using Microsoft.Dnx.Runtime;
-using Microsoft.Extensions.PlatformAbstractions;
+﻿using Microsoft.Extensions.PlatformAbstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +55,7 @@ namespace Dnx.Genny
 
         private String ToKebabCase(String typeName)
         {
-            return String.Join("-", Regex.Split(typeName, @"(?<!^)(?=[A-Z])").Select(name => name.ToLower()));
+            return String.Join("-", Regex.Split(typeName, @"(?<!^)(?=[A-Z])").Select(name => name)).ToLower();
         }
     }
 }
