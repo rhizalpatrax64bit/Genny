@@ -59,12 +59,15 @@ namespace Dnx.Genny
                 else
                 {
                     if (!File.Exists(resultPath))
+                    {
+                        results.Add(resultPath, result);
                         Logger.Write($"{shortPath} - Succeeded");
+                    }
                     else
+                    {
                         Logger.Write($"{shortPath} - Already exists, skipping...");
+                    }
                 }
-
-                results.Add(resultPath, result);
             }
 
             if (results.Any(result => result.Value.Errors.Any()))
