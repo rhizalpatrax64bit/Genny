@@ -7,7 +7,7 @@ namespace Dnx.Genny
 {
     public class GennyCommandLineParser
     {
-        public void ParseTo(IGennyModule module, IList<String> args)
+        public void ParseTo(IGennyModule module, String[] args)
         {
             IEnumerable<PropertyInfo> parameters = module
                 .GetType()
@@ -32,13 +32,13 @@ namespace Dnx.Genny
             {
                 GennyParameterAttribute parameter = property.GetCustomAttribute<GennyParameterAttribute>(false);
 
-                if (args.Count <= parameter.Order && parameter.Required)
+                if (args.Length <= parameter.Order && parameter.Required)
                     throw new GennyCommandLineException($"Could not find a required parameter at position: {parameter.Order}.");
 
                 property.SetValue(module, Convert.ChangeType(args[parameter.Order.Value], property.PropertyType));
             }
 
-            args = args.Skip(orderedParameters.Count()).ToList();
+            args = args.Skip(orderedParameters.Count()).ToArray();
 
             foreach (PropertyInfo property in namedParameters)
             {

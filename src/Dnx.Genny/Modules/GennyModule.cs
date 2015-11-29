@@ -7,16 +7,16 @@ using System.Linq;
 
 namespace Dnx.Genny
 {
-    public abstract class GennyModuleBase : IGennyModule
+    public abstract class GennyModule : IGennyModule
     {
         protected String ModuleRoot { get; }
         protected IGennyLogger Logger { get; }
         protected IGennyScaffolder Scaffolder { get; set; }
         protected IApplicationEnvironment Environment { get; set; }
 
-        protected GennyModuleBase(IServiceProvider provider)
+        protected GennyModule(IServiceProvider provider)
         {
-            Environment = provider.GetService<IApplicationEnvironment>();
+            Environment = provider.GetRequiredService<IApplicationEnvironment>();
             Scaffolder = provider.GetService<IGennyScaffolder>();
             Logger = provider.GetService<IGennyLogger>();
             ModuleRoot = GetModuleRoot();
