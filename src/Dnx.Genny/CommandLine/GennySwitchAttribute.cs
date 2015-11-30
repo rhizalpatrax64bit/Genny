@@ -18,6 +18,9 @@ namespace Dnx.Genny
         }
         public GennySwitchAttribute(String name, String shortName) : this(name)
         {
+            if (String.IsNullOrWhiteSpace(shortName))
+                throw new ArgumentException("Genny switch short name should not be null or empty.");
+
             ShortName = shortName;
         }
     }

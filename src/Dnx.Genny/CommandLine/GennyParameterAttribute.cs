@@ -25,6 +25,9 @@ namespace Dnx.Genny
         }
         public GennyParameterAttribute(String name, String shortName) : this(name)
         {
+            if (String.IsNullOrWhiteSpace(shortName))
+                throw new ArgumentException("Genny parameter short name should not be null or empty.");
+
             ShortName = shortName;
         }
     }
