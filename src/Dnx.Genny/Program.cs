@@ -8,6 +8,7 @@ namespace Dnx.Genny
     public class Program
     {
         private IGennyLogger Logger { get; }
+        private IGennyModuleLocator Locator { get; }
         private ServiceProvider ServiceProvider { get; }
 
         public Program(IServiceProvider serviceProvider)
@@ -19,33 +20,32 @@ namespace Dnx.Genny
             ServiceProvider.Add<IGennyScaffolder, GennyScaffolder>();
             ServiceProvider.Add<IGennyModuleLocator, GennyModuleLocator>();
 
-            Logger = ServiceProvider.GetService<IGennyLogger>();
+            Logger = ServiceProvider.GetRequiredService<IGennyLogger>();
+            Locator = ServiceProvider.GetRequiredService<IGennyModuleLocator>();
         }
 
         public void Main(String[] args)
         {
-            if (ShouldShowHelp(args))
+            if (ShowHelpFor(args))
             {
                 ShowHelp();
                 ShowAvailableModules();
             }
             else
             {
-                IGennyModuleLocator locator = ServiceProvider.GetService<IGennyModuleLocator>();
-                IEnumerable<GennyModuleDescriptor> descriptors = locator.Find(args[0]);
-                GennyModuleDescriptor descriptor = descriptors.FirstOrDefault();
-                Int32 descriptorCount = descriptors.Count();
+                String moduleName = args[0];
+                GennyModuleDescriptor[] descriptors = Locator.Find(moduleName).ToArray();
 
-                switch(descriptorCount)
+                switch(descriptors.Count())
                 {
                     case 0:
-                        Logger.Write($"Could not find a genny module named: {args[0]}");
+                        Logger.Write($"Could not find a genny module named: {moduleName}");
                         ShowAvailableModules();
 
                         break;
                     case 1:
-                        IGennyModule module = ActivatorUtilities.CreateInstance(ServiceProvider, descriptor.Type) as IGennyModule;
-                        if (args.Length == 1 || ShouldShowHelp(args.Skip(1).ToArray()))
+                        IGennyModule module = ActivatorUtilities.CreateInstance(ServiceProvider, descriptors[0].Type) as IGennyModule;
+                        if (args.Length == 1 || ShowHelpFor(args.Skip(1).ToArray()))
                         {
                             module.ShowHelp(Logger);
                         }
@@ -58,7 +58,7 @@ namespace Dnx.Genny
 
                         break;
                     default:
-                        Logger.Write($"Found more than one genny module named: {args[0]}");
+                        Logger.Write($"Found more than one genny module named: {moduleName}");
                         ShowAvailableModules();
 
                         break;
@@ -66,10 +66,9 @@ namespace Dnx.Genny
             }
         }
 
-        private Boolean ShouldShowHelp(String[] args)
+        private Boolean ShowHelpFor(String[] args)
         {
-            return args == null || args.Length == 0 ||
-                new[] { "?", "-?", "-h", "--help" }.Any(arg => String.Equals(args[0], arg, StringComparison.OrdinalIgnoreCase));
+            return args.Length == 0 || new[] { "-?", "-h", "--help" }.Contains(args.FirstOrDefault());
         }
         private void ShowAvailableModules()
         {

@@ -14,13 +14,13 @@ namespace Dnx.Genny
 {
     public class GennyCompiler : IGennyCompiler
     {
-        private IAssemblyLoadContext Loader { get; }
+        private IAssemblyLoadContext Context { get; }
         private ILibraryExporter LibraryExporter { get; }
         private IApplicationEnvironment Environment { get; }
 
         public GennyCompiler(IApplicationEnvironment environment, IAssemblyLoadContextAccessor accessor, ILibraryExporter exporter)
         {
-            Loader = accessor.GetLoadContext(typeof(GennyCompiler).GetTypeInfo().Assembly);
+            Context = accessor.GetLoadContext(typeof(GennyCompiler).GetTypeInfo().Assembly);
             LibraryExporter = exporter;
             Environment = environment;
         }
@@ -52,7 +52,7 @@ namespace Dnx.Genny
                 peStream.Seek(0, SeekOrigin.Begin);
                 pdbStream.Seek(0, SeekOrigin.Begin);
 
-                return new CompilationResult(Loader.LoadStream(peStream, pdbStream).ExportedTypes.First());
+                return new CompilationResult(Context.LoadStream(peStream, pdbStream).ExportedTypes.First());
             }
         }
 
