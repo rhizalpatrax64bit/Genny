@@ -8,6 +8,7 @@ namespace Dnx.Genny
     public class Program
     {
         private IGennyLogger Logger { get; }
+        private IGennyModuleLoader Loader { get; }
         private IGennyModuleLocator Locator { get; }
         private ServiceProvider ServiceProvider { get; }
 
@@ -18,9 +19,11 @@ namespace Dnx.Genny
             ServiceProvider.Add<IGennyLogger, GennyLogger>();
             ServiceProvider.Add<IGennyCompiler, GennyCompiler>();
             ServiceProvider.Add<IGennyScaffolder, GennyScaffolder>();
+            ServiceProvider.Add<IGennyModuleLoader, GennyModuleLoader>();
             ServiceProvider.Add<IGennyModuleLocator, GennyModuleLocator>();
 
             Logger = ServiceProvider.GetRequiredService<IGennyLogger>();
+            Loader = ServiceProvider.GetRequiredService<IGennyModuleLoader>();
             Locator = ServiceProvider.GetRequiredService<IGennyModuleLocator>();
         }
 
@@ -34,6 +37,7 @@ namespace Dnx.Genny
             else
             {
                 String moduleName = args[0];
+                String[] moduleArgs = args.Skip(1).ToArray();
                 GennyModuleDescriptor[] descriptors = Locator.Find(moduleName).ToArray();
 
                 switch(descriptors.Count())
@@ -44,16 +48,17 @@ namespace Dnx.Genny
 
                         break;
                     case 1:
-                        IGennyModule module = ActivatorUtilities.CreateInstance(ServiceProvider, descriptors[0].Type) as IGennyModule;
-                        if (args.Length == 1 || ShowHelpFor(args.Skip(1).ToArray()))
+                        GennyModuleLoaderResult result = Loader.Load(descriptors[0], moduleArgs);
+                        if (result.Errors.Any())
                         {
-                            module.ShowHelp(Logger);
+                            foreach (String error in result.Errors)
+                                Logger.Write(error);
+
+                            result.Module.ShowHelp(Logger);
                         }
                         else
                         {
-                            GennyCommandLineParser parser = new GennyCommandLineParser();
-                            parser.ParseTo(module, args.Skip(1).ToArray());
-                            module.Run();
+                            result.Module.Run();
                         }
 
                         break;
