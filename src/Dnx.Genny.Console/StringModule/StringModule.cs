@@ -19,6 +19,14 @@ namespace Dnx.Genny.Modules
         {
         }
 
+        public override void Run()
+        {
+            String template = ReadTemplate(ModuleRoot, "Controls", "Class.cshtml");
+            ScaffoldingResult result = Scaffolder.Scaffold(template, this);
+
+            TryWrite($"Controls/{ClassName}.cs", result);
+        }
+
         public override void ShowHelp(IGennyLogger logger)
         {
             logger.Write("Parameters:");

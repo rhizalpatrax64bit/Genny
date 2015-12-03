@@ -9,8 +9,8 @@ namespace Dnx.Genny
 {
     public abstract class GennyModule : IGennyModule
     {
-        protected String ModuleRoot { get; }
-        protected IGennyLogger Logger { get; }
+        protected String ModuleRoot { get; set; }
+        protected IGennyLogger Logger { get; set; }
         protected IGennyScaffolder Scaffolder { get; set; }
         protected IApplicationEnvironment Environment { get; set; }
 
@@ -19,71 +19,43 @@ namespace Dnx.Genny
             Environment = provider.GetRequiredService<IApplicationEnvironment>();
             Scaffolder = provider.GetService<IGennyScaffolder>();
             Logger = provider.GetService<IGennyLogger>();
-            ModuleRoot = GetModuleRoot();
+            ModuleRoot = FindModuleRoot();
+        }
+        private String FindModuleRoot()
+        {
+            String[] files = Directory.GetFiles(Environment.ApplicationBasePath,
+                GetType().Name + ".cs", SearchOption.AllDirectories);
+            if (files.Length != 1) return null;
+
+            return Path.GetDirectoryName(files[0]);
         }
 
-        public virtual void Run()
-        {
-            Run(this);
-        }
+        public abstract void Run();
         public virtual void ShowHelp(IGennyLogger logger)
         {
             logger.Write("    Help is not available for this module.");
         }
 
-        protected virtual void Run(Object model)
+        protected virtual String ReadTemplate(params String[] paths)
         {
-            if (ModuleRoot == null)
+            return File.ReadAllText(Path.Combine(paths));
+        }
+
+        protected virtual void Write(String path, ScaffoldingResult result)
+        {
+            if (result.Errors.Any())
             {
-                Logger.Write("Module root folder was not found, aborting...");
-
-                return;
-            }
-
-            String[] templates = Directory.GetFiles(ModuleRoot, "*.cshtml", SearchOption.AllDirectories);
-            IDictionary<String, ScaffoldingResult> results = new Dictionary<String, ScaffoldingResult>(templates.Length);
-
-            foreach (String template in templates)
-            {
-                String outputPath = template.Remove(template.Length - 7).Replace(ModuleRoot, "").TrimStart('\\', '/');
-                String resultPath = FormResultPath(Environment.ApplicationName, outputPath);
-                String shortPath = Path.Combine(Environment.ApplicationName, outputPath);
-
-                ScaffoldingResult result = Scaffolder.Scaffold(Read(template), model);
-                if (result.Errors.Any())
-                {
-                    Logger.Write($"{shortPath} - Failed");
-                    foreach (String error in result.Errors)
-                        Logger.Write($"  - {error}");
-                }
-                else
-                {
-                    if (!File.Exists(resultPath))
-                    {
-                        results.Add(resultPath, result);
-                        Logger.Write($"{shortPath} - Succeeded");
-                    }
-                    else
-                    {
-                        Logger.Write($"{shortPath} - Already exists, skipping...");
-                    }
-                }
-            }
-
-            if (results.Any(result => result.Value.Errors.Any()))
-            {
-                Logger.Write("Scaffolding failed! Rolling back...");
+                Logger.Write($"{path} - Failed");
+                foreach (String error in result.Errors)
+                    Logger.Write($"  - {error}");
             }
             else
             {
-                Write(results);
-                Logger.Write("Scaffolded successfully!");
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                File.WriteAllText(path, result.Content);
+
+                Logger.Write($"{path} - Succeeded");
             }
-        }
-        protected virtual void Write(String path, ScaffoldingResult result)
-        {
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
-            File.WriteAllText(path, result.Content);
         }
         protected virtual void Write(IDictionary<String, ScaffoldingResult> results)
         {
@@ -91,26 +63,17 @@ namespace Dnx.Genny
                 Write(result.Key, result.Value);
         }
 
-        private String FormResultPath(String project, String outputPath)
+        protected virtual void TryWrite(String path, ScaffoldingResult result)
         {
-            String path = Path.GetDirectoryName(Environment.ApplicationBasePath);
-            path = Path.Combine(path, project, outputPath);
-            path = Path.GetFullPath(path);
-
-            return path;
+            if (!File.Exists(path))
+                Write(path, result);
+            else
+                Logger.Write($"{path} - Already exists, skipping...");
         }
-        private String Read(String template)
+        protected virtual void TryWrite(IDictionary<String, ScaffoldingResult> results)
         {
-            String path = Path.Combine(Environment.ApplicationBasePath, template);
-
-            return File.ReadAllText(path);
-        }
-        private String GetModuleRoot()
-        {
-            String[] files = Directory.GetFiles(Environment.ApplicationBasePath, GetType().Name + ".cs", SearchOption.AllDirectories);
-            if (files.Length != 1) return null;
-
-            return Path.GetDirectoryName(files[0]);
+            foreach (KeyValuePair<String, ScaffoldingResult> result in results)
+                TryWrite(result.Key, result.Value);
         }
     }
 }

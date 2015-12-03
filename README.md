@@ -12,30 +12,49 @@ Locate the commands section in `project.json` and add the gen command:
 }
 ```
 
-# Default usage
+# Example usage
 
-Implement `GennyModuleBase`
+Implement `GennyModule`
 
 ```C#
+using System;
 using Dnx.Genny;
-using Microsoft.Framework.Runtime;
 
-namespace Project.GennyModules.Default
+namespace Project.Templates.Default
 {
-    [GennyParameter(0, Required = true)]
-    public String ClassName { get; set; }
-
-    [GennyParameter(1, Required = true)]
-    public String MethodName { get; set; }
-
-    [GennyParameter("namespace", "n")]
-    public String NameSpace { get; set; }
-
-    public class DefaultModule : GennyModuleBase
+    [GennyModuleDescriptor("An example module")]
+    public class Default : GennyModule
     {
-        public DefaultModule(IServiceProvider provider)
+        [GennyParameter(0, Required = true)]
+        public String ClassName { get; set; }
+
+        [GennyParameter(1, Required = true)]
+        public String MethodName { get; set; }
+
+        [GennyParameter("namespace", "n")]
+        public String Namespace { get; set; }
+
+        public Default(IServiceProvider provider)
             : base(provider)
         {
+        }
+
+        public override void Run()
+        {
+            String template = ReadTemplate(ModuleRoot, "Main", "Class.cshtml");
+            ScaffoldingResult result = Scaffolder.Scaffold(template, this);
+
+            TryWrite($"Controls/{ClassName}.cs", result);
+        }
+
+        public override void ShowHelp(IGennyLogger logger)
+        {
+            logger.Write("Parameters:");
+            logger.Write("    1 - Scaffolded class name.");
+            logger.Write("    2 - Scaffolded method name.");
+
+            logger.Write("Named parameters:");
+            logger.Write("    -n|--namespace  - Scaffolded class namespace.");
         }
     }
 }
@@ -44,20 +63,18 @@ namespace Project.GennyModules.Default
 Which scaffolds templates from module's folder
 ```
 Project
-├── README.md                           <----- Unrelated project files
+├── README.md                       <----- Unrelated project files
 ├── ...
 ├── ...
 ├── ...   
 │
 └───GennyModules
-    ├───Default                         <----- Default module folder
-    │   ├── MainFolder                  <----- Default module template's folder
-    │   │   └── DefaultClass.cs.cshtml  <----- Default module template
-    │   │
-    │   ├── DefaultHelper.cs.cshtml     <----- Default module template
-    |   └── DefaultModule.cs            <----- Default module class
+    ├───Default                     <----- Default module folder
+    │   ├── Main                    <----- Default module template's folder
+    │   │   └── Class.cshtml        <----- Default module template
+    |   └── Default.cs              <----- Default module class
     │   
-    ├───Advanced                        <----- Other unrelated modules
+    ├───Advanced                    <----- Other unrelated modules
     │   ├── AdvancedClass.cs.cshtml
     │   │   ...
 ```
@@ -65,7 +82,7 @@ Project
 Run your module from command line, by navigating to the project directory and running
 
 ```
-dnx gen default ClassName MethodName -n Namespace.Default
+dnx gen default Main Run -n Project.Controls
 ```
 
 Which results in project structure
@@ -76,56 +93,13 @@ Project
 ├── ...
 ├── ...
 |
-├── MainFolder
-│   └── DefaultClass.cs
-├── DefaultHelper.cs
+├── Controls
+│   └── Main.cs
+|
+├── ...
 |
 └───GennyModules
     ├─── ...
     ├─── ...
     |
-```
-
-# Advanced usage
-
-Implement `IGennyModule`
-
-```C#
-using System;
-using Dnx.Genny;
-using System.Linq;
-
-namespace Project.GennyModules.Advanced
-{
-    public class MyGennyModule : IGennyModule
-    {
-        public IGennyScaffolder Scaffolder { get; set; }
-
-        public MyGennyModule(IGennyScaffolder scaffolder)
-        {
-            Scaffolder = scaffolder;
-        }
-
-        public void Run()
-        {
-            ScaffoldingResult result = Scaffolder.Scaffold("@model string\nHi from @Model", "Model");
-
-            if (result.Errors.Any())
-            {
-                // Failed to scaffold, write out error or do nothing
-            }
-            else
-            {
-                // Write(result); // Writes result.Content to result.Path
-                // Or write results to any other source
-            }
-        }
-    }
-}
-```
-
-Run your module from command line, by navigating to the project directory and running
-
-```
-dnx gen my-genny-module
 ```
