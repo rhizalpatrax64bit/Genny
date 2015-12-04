@@ -2,8 +2,9 @@
 
 namespace Dnx.Genny.Modules
 {
+    [GennyAlias("default")]
     [GennyModuleDescriptor("An example module")]
-    public class StringModule : GennyModule
+    public class DefaultModule : GennyModule
     {
         [GennyParameter(0, Required = true)]
         public String ClassName { get; set; }
@@ -14,7 +15,7 @@ namespace Dnx.Genny.Modules
         [GennyParameter("namespace", "n")]
         public String Namespace { get; set; }
 
-        public StringModule(IServiceProvider provider)
+        public DefaultModule(IServiceProvider provider)
             : base(provider)
         {
         }

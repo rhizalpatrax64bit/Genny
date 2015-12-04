@@ -22,8 +22,9 @@ using Dnx.Genny;
 
 namespace Project.Templates.Default
 {
+    [GennyAlias("Default")]
     [GennyModuleDescriptor("An example module")]
-    public class Default : GennyModule
+    public class DefaultModule : GennyModule
     {
         [GennyParameter(0, Required = true)]
         public String ClassName { get; set; }
@@ -34,7 +35,7 @@ namespace Project.Templates.Default
         [GennyParameter("namespace", "n")]
         public String Namespace { get; set; }
 
-        public Default(IServiceProvider provider)
+        public DefaultModule(IServiceProvider provider)
             : base(provider)
         {
         }
@@ -72,7 +73,7 @@ Project
     ├───Default                     <----- Default module folder
     │   ├── Main                    <----- Default module template's folder
     │   │   └── Class.cshtml        <----- Default module template
-    |   └── Default.cs              <----- Default module class
+    |   └── DefaultModule.cs        <----- Default module class
     │   
     ├───Advanced                    <----- Other unrelated modules
     │   ├── AdvancedClass.cs.cshtml
