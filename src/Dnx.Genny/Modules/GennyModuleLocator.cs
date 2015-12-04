@@ -59,6 +59,9 @@ namespace Dnx.Genny
             if (String.Equals(type.Name, name, StringComparison.OrdinalIgnoreCase))
                 return true;
 
+            if (String.Equals(type.FullName, name, StringComparison.OrdinalIgnoreCase))
+                return true;
+
             if (String.Equals(ToKebabCase(type.Name), name, StringComparison.OrdinalIgnoreCase))
                 return true;
 
