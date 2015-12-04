@@ -23,7 +23,7 @@ namespace Dnx.Genny.Modules
         public override void Run()
         {
             String template = ReadTemplate(ModuleRoot, "Controls", "Class.cshtml");
-            ScaffoldingResult result = Scaffolder.Scaffold(template, this);
+            GennyScaffoldingResult result = Scaffolder.Scaffold(template, this);
 
             TryWrite($"Controls/{ClassName}.cs", result);
         }

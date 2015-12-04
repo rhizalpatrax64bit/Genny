@@ -41,7 +41,7 @@ namespace Dnx.Genny
             return File.ReadAllText(Path.Combine(paths));
         }
 
-        protected virtual void Write(String path, ScaffoldingResult result)
+        protected virtual void Write(String path, GennyScaffoldingResult result)
         {
             if (result.Errors.Any())
             {
@@ -57,22 +57,22 @@ namespace Dnx.Genny
                 Logger.Write($"{path} - Succeeded");
             }
         }
-        protected virtual void Write(IDictionary<String, ScaffoldingResult> results)
+        protected virtual void Write(IDictionary<String, GennyScaffoldingResult> results)
         {
-            foreach (KeyValuePair<String, ScaffoldingResult> result in results)
+            foreach (KeyValuePair<String, GennyScaffoldingResult> result in results)
                 Write(result.Key, result.Value);
         }
 
-        protected virtual void TryWrite(String path, ScaffoldingResult result)
+        protected virtual void TryWrite(String path, GennyScaffoldingResult result)
         {
             if (!File.Exists(path))
                 Write(path, result);
             else
                 Logger.Write($"{path} - Already exists, skipping...");
         }
-        protected virtual void TryWrite(IDictionary<String, ScaffoldingResult> results)
+        protected virtual void TryWrite(IDictionary<String, GennyScaffoldingResult> results)
         {
-            foreach (KeyValuePair<String, ScaffoldingResult> result in results)
+            foreach (KeyValuePair<String, GennyScaffoldingResult> result in results)
                 TryWrite(result.Key, result.Value);
         }
     }

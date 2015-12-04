@@ -10,11 +10,11 @@ namespace Dnx.Genny
         private IGennyLogger Logger { get; }
         private IGennyModuleLoader Loader { get; }
         private IGennyModuleLocator Locator { get; }
-        private ServiceProvider ServiceProvider { get; }
+        private GennyServiceProvider ServiceProvider { get; }
 
         public Program(IServiceProvider serviceProvider)
         {
-            ServiceProvider = new ServiceProvider(serviceProvider);
+            ServiceProvider = new GennyServiceProvider(serviceProvider);
 
             ServiceProvider.Add<IGennyLogger, GennyLogger>();
             ServiceProvider.Add<IGennyCompiler, GennyCompiler>();

@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace Dnx.Genny
 {
-    public class ScaffoldingResult
+    public class GennyScaffoldingResult
     {
         public String Content { get; set; }
         public IEnumerable<String> Errors { get; set; }
 
-        public ScaffoldingResult()
+        public GennyScaffoldingResult()
         {
             Errors = new String[0];
         }
-        public ScaffoldingResult(String content) : this()
+        public GennyScaffoldingResult(String content) : this()
         {
             Content = content;
         }
-        public ScaffoldingResult(IEnumerable<String> erorrs)
+        public GennyScaffoldingResult(IEnumerable<String> erorrs)
         {
             Errors = erorrs ?? new String[0];
         }

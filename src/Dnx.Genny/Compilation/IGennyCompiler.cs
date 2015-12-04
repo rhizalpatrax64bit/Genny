@@ -4,6 +4,6 @@ namespace Dnx.Genny
 {
     public interface IGennyCompiler
     {
-        CompilationResult Compile(String code);
+        GennyCompilationResult Compile(String code);
     }
 }

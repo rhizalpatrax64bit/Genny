@@ -43,7 +43,7 @@ namespace Project.Templates.Default
         public override void Run()
         {
             String template = ReadTemplate(ModuleRoot, "Main", "Class.cshtml");
-            ScaffoldingResult result = Scaffolder.Scaffold(template, this);
+            GennyScaffoldingResult result = Scaffolder.Scaffold(template, this);
 
             TryWrite($"Controls/{ClassName}.cs", result);
         }

@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace Dnx.Genny
 {
-    public class ServiceProvider : IServiceProvider
+    public class GennyServiceProvider : IServiceProvider
     {
         private Dictionary<Type, Object> Instances { get; }
         private IServiceProvider FallbackProvider { get; }
 
-        public ServiceProvider(IServiceProvider fallback)
+        public GennyServiceProvider(IServiceProvider fallback)
         {
             Instances = new Dictionary<Type, Object>();
             Instances[typeof(IServiceProvider)] = this;

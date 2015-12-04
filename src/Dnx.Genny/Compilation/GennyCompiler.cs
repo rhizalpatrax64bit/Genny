@@ -25,7 +25,7 @@ namespace Dnx.Genny
             Environment = environment;
         }
 
-        public CompilationResult Compile(String code)
+        public GennyCompilationResult Compile(String code)
         {
             CSharpCompilation compilation = CSharpCompilation.Create(
                 Path.GetRandomFileName(), new[] { CSharpSyntaxTree.ParseText(code) },
@@ -46,13 +46,13 @@ namespace Dnx.Genny
                         .Select(diagnostic =>
                             diagnostic.ToString());
 
-                    return new CompilationResult(errors);
+                    return new GennyCompilationResult(errors);
                 }
 
                 peStream.Seek(0, SeekOrigin.Begin);
                 pdbStream.Seek(0, SeekOrigin.Begin);
 
-                return new CompilationResult(Context.LoadStream(peStream, pdbStream).ExportedTypes.First());
+                return new GennyCompilationResult(Context.LoadStream(peStream, pdbStream).ExportedTypes.First());
             }
         }
 

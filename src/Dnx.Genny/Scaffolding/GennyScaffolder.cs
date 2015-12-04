@@ -16,25 +16,25 @@ namespace Dnx.Genny
             Compiler = compiler;
         }
 
-        public ScaffoldingResult Scaffold(String template)
+        public GennyScaffoldingResult Scaffold(String template)
         {
             return Scaffold(template, null);
         }
-        public ScaffoldingResult Scaffold(String template, Object model)
+        public GennyScaffoldingResult Scaffold(String template, Object model)
         {
             RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost());
             using (StringReader input = new StringReader(template))
             {
                 GeneratorResults results = engine.GenerateCode(input);
-                if (!results.Success) return new ScaffoldingResult(results.ParserErrors.Select(error => error.ToString()));
+                if (!results.Success) return new GennyScaffoldingResult(results.ParserErrors.Select(error => error.ToString()));
 
-                CompilationResult result = Compiler.Compile(results.GeneratedCode);
-                if (result.Errors.Any()) return new ScaffoldingResult(result.Errors);
+                GennyCompilationResult result = Compiler.Compile(results.GeneratedCode);
+                if (result.Errors.Any()) return new GennyScaffoldingResult(result.Errors);
 
                 Object gennyTemplate = Activator.CreateInstance(result.CompiledType);
                 MethodInfo execute = gennyTemplate.GetType().GetMethod("Execute");
 
-                return new ScaffoldingResult(execute.Invoke(gennyTemplate, new[] { model }) as String);
+                return new GennyScaffoldingResult(execute.Invoke(gennyTemplate, new[] { model }) as String);
             }
         }
     }
