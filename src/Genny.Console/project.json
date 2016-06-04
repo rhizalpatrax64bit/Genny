@@ -1,0 +1,29 @@
+{
+  "description": "Genny test console",
+  "authors": [ "Muchiachio" ],
+  "version": "0.9.5",
+
+  "dependencies": {
+    "Genny": "0.9.5"
+  },
+
+  "buildOptions": {
+    "preserveCompilationContext": true,
+    "emitEntryPoint": true
+  },
+
+  "frameworks": {
+    "net451": { },
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0-rc2-3002702"
+        }
+      },
+      "imports": [
+        "portable-net451+win8"
+      ]
+    }
+  }
+}

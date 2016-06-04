@@ -1,24 +1,14 @@
-Code generator for DNX projects.
+Code generator for DotNet projects.
 
 This project is currently in development.
-
-# Installation
-
-Locate the commands section in `project.json` and add the gen command:
-
-```JSON
-"commands": {
-  "gen": "Dnx.Genny"
-}
-```
 
 # Example usage
 
 Implement `GennyModule`
 
 ```C#
+using Genny;
 using System;
-using Dnx.Genny;
 
 namespace Project.Templates.Default
 {
@@ -78,12 +68,6 @@ Project
     ├───Advanced                    <----- Other unrelated modules
     │   ├── AdvancedClass.cs.cshtml
     │   │   ...
-```
-
-Run your module from command line, by navigating to the project directory and running
-
-```
-dnx gen default Main Run -n Project.Controls
 ```
 
 Which results in project structure
