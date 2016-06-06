@@ -2,6 +2,23 @@ Code generator for DotNet projects.
 
 This project is currently in development.
 
+# Installation
+
+Add genny dependencies to `project.json`:
+
+```JSON
+"dependencies": {
+  "Genny": "0.9.5"
+}
+
+"tools": {
+  "Genny": {
+    "version": "0.9.5",
+    "imports": "portable-451"
+  }
+}
+```
+
 # Example usage
 
 Implement `GennyModule`
@@ -68,6 +85,12 @@ Project
     ├───Advanced                    <----- Other unrelated modules
     │   ├── AdvancedClass.cs.cshtml
     │   │   ...
+```
+
+Run your module from command line, by navigating to the project directory and running
+
+```
+dotnet gen default Main Run -n Project.Controls
 ```
 
 Which results in project structure

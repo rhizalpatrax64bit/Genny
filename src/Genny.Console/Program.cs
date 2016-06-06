@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.DotNet.ProjectModel;
+using System;
+using System.IO;
 
 namespace Genny.Console
 {
@@ -6,7 +8,11 @@ namespace Genny.Console
     {
         public static void Main(String[] args)
         {
-            Genny.Program.Main(new[] { "default", "Main", "Run", "-n", "Genny.Console.Controls" });
+            GennyApplication application = new GennyApplication();
+            application.BasePath = Path.GetFullPath(Directory.GetCurrentDirectory());
+            application.Name = ProjectReader.GetProject(application.BasePath).Name;
+
+            new GennyCommand(application).Execute(new[] { "default", "Main", "Run", "-n", "Genny.Console.Controls" });
         }
     }
 }

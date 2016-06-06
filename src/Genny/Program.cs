@@ -1,111 +1,42 @@
-﻿using Microsoft.DotNet.ProjectModel;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.DotNet.Cli.Utils;
+using Microsoft.DotNet.ProjectModel;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Genny
 {
     public class Program
     {
-        private IGennyLogger Logger { get; }
-        private IGennyModuleLoader Loader { get; }
-        private IGennyModuleLocator Locator { get; }
-        private GennyServiceProvider ServiceProvider { get; }
-
-        public Program()
-        {
-            ServiceProvider = new GennyServiceProvider();
-
-            GennyApplication application = new GennyApplication();
-            application.BasePath = Path.GetFullPath(Directory.GetCurrentDirectory());
-            application.Name = ProjectReader.GetProject(application.BasePath).Name;
-
-            ServiceProvider.Add(application);
-            ServiceProvider.Add<IGennyLogger, GennyLogger>();
-            ServiceProvider.Add<IGennyCompiler, GennyCompiler>();
-            ServiceProvider.Add<IGennyScaffolder, GennyScaffolder>();
-            ServiceProvider.Add<IGennyModuleLoader, GennyModuleLoader>();
-            ServiceProvider.Add<IGennyModuleLocator, GennyModuleLocator>();
-
-            Logger = ServiceProvider.GetRequiredService<IGennyLogger>();
-            Loader = ServiceProvider.GetRequiredService<IGennyModuleLoader>();
-            Locator = ServiceProvider.GetRequiredService<IGennyModuleLocator>();
-        }
-
         public static void Main(String[] args)
         {
-            new Program().Run(args);
-        }
+            String toolName = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+            String path = Path.GetFullPath(Directory.GetCurrentDirectory());
+            GennyApplication application = new GennyApplication();
+            Project project = ProjectReader.GetProject(path);
+            application.Name = project.Name;
+            application.BasePath = path;
 
-        private void Run(String[] args)
-        {
-            if (ShowHelpFor(args))
+            if (args.Contains("--no-dispatch"))
             {
-                ShowHelp();
-                ShowAvailableModules();
+                new GennyCommand(application).Execute(args.Where(arg => arg != "--no-dispatch").ToArray());
             }
             else
             {
-                String moduleName = args[0];
-                String[] moduleArgs = args.Skip(1).ToArray();
-                GennyModuleDescriptor[] descriptors = Locator.Find(moduleName).ToArray();
+                ProjectDependenciesCommandFactory factory = new ProjectDependenciesCommandFactory(
+                    project.GetTargetFrameworks().FirstOrDefault().FrameworkName,
+                    Constants.DefaultConfiguration,
+                    null,
+                    null,
+                    path);
 
-                switch (descriptors.Length)
-                {
-                    case 0:
-                        Logger.Write($"Could not find a genny module named: {moduleName}");
-                        ShowAvailableModules();
-
-                        break;
-                    case 1:
-                        GennyModuleLoaderResult result = Loader.Load(descriptors[0], moduleArgs);
-                        if (result.Errors.Any())
-                        {
-                            foreach (String error in result.Errors)
-                                Logger.Write(error);
-
-                            result.Module.ShowHelp(Logger);
-                        }
-                        else
-                        {
-                            result.Module.Run();
-                        }
-
-                        break;
-                    default:
-                        Logger.Write($"Found more than one genny module named: {moduleName}");
-                        ShowAvailableModules();
-
-                        break;
-                }
+                factory
+                    .Create(toolName, args.Concat(new[] { "--no-dispatch" }).ToArray())
+                    .ForwardStdErr()
+                    .ForwardStdOut()
+                    .Execute();
             }
-        }
-
-        private Boolean ShowHelpFor(String[] args)
-        {
-            return args.Length == 0 || new[] { "-?", "-h", "--help" }.Contains(args.FirstOrDefault());
-        }
-        private void ShowAvailableModules()
-        {
-            IGennyModuleLocator locator = ServiceProvider.GetService<IGennyModuleLocator>();
-            IEnumerable<GennyModuleDescriptor> descriptors = locator.FindAll();
-
-            if (descriptors.Any())
-            {
-                Logger.Write("Available genny modules:");
-                foreach (GennyModuleDescriptor descriptor in descriptors)
-                    Logger.Write($"    {descriptor.Name} - {descriptor.Description ?? "{No description}"}");
-            }
-            else
-            {
-                Logger.Write("There are no genny modules installed!");
-            }
-        }
-        private void ShowHelp()
-        {
-            Logger.Write("Usage: dotnet gen <genny command name> <genny module name> [genny module parameters]");
         }
     }
 }
