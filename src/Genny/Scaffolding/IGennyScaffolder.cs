@@ -4,7 +4,9 @@ namespace Genny
 {
     public interface IGennyScaffolder
     {
-        GennyScaffoldingResult Scaffold(String template);
-        GennyScaffoldingResult Scaffold(String template, Object model);
+        String RootPath { get; set; }
+
+        GennyScaffoldingResult Scaffold(String path);
+        GennyScaffoldingResult Scaffold(String path, Object model);
     }
 }

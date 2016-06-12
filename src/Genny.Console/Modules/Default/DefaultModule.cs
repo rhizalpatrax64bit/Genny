@@ -22,8 +22,7 @@ namespace Genny.Modules
 
         public override void Run()
         {
-            String template = ReadTemplate(ModuleRoot, "Controls", "Class.cshtml");
-            GennyScaffoldingResult result = Scaffolder.Scaffold(template, this);
+            GennyScaffoldingResult result = Scaffolder.Scaffold("Controls/Class.cshtml", this);
 
             TryWrite($"Controls/{ClassName}.cs", result);
         }

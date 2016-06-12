@@ -8,7 +8,6 @@ namespace Genny
 {
     public abstract class GennyModule : IGennyModule
     {
-        protected String ModuleRoot { get; set; }
         protected IGennyLogger Logger { get; set; }
         protected IGennyScaffolder Scaffolder { get; set; }
         protected GennyApplication Application { get; set; }
@@ -18,7 +17,7 @@ namespace Genny
             Application = provider.GetRequiredService<GennyApplication>();
             Scaffolder = provider.GetService<IGennyScaffolder>();
             Logger = provider.GetService<IGennyLogger>();
-            ModuleRoot = FindModuleRoot();
+            Scaffolder.RootPath = FindModuleRoot();
         }
         private String FindModuleRoot()
         {
@@ -32,11 +31,6 @@ namespace Genny
         public virtual void ShowHelp(IGennyLogger logger)
         {
             logger.Write("    Help is not available for this module.");
-        }
-
-        protected virtual String ReadTemplate(params String[] paths)
-        {
-            return File.ReadAllText(Path.Combine(paths));
         }
 
         protected virtual void Write(String path, GennyScaffoldingResult result)

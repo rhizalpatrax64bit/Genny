@@ -9,6 +9,7 @@ namespace Genny
 {
     public class GennyScaffolder : IGennyScaffolder
     {
+        public String RootPath { get; set; }
         private IGennyCompiler Compiler { get; }
 
         public GennyScaffolder(IGennyCompiler compiler)
@@ -16,14 +17,14 @@ namespace Genny
             Compiler = compiler;
         }
 
-        public GennyScaffoldingResult Scaffold(String template)
+        public GennyScaffoldingResult Scaffold(String path)
         {
-            return Scaffold(template, null);
+            return Scaffold(path, null);
         }
-        public GennyScaffoldingResult Scaffold(String template, Object model)
+        public GennyScaffoldingResult Scaffold(String path, Object model)
         {
             RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost());
-            using (StringReader input = new StringReader(template))
+            using (StringReader input = new StringReader(File.ReadAllText(Path.Combine(RootPath, path))))
             {
                 GeneratorResults results = engine.GenerateCode(input);
                 if (!results.Success) return new GennyScaffoldingResult(results.ParserErrors.Select(error => error.ToString()));
