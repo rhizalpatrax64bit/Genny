@@ -23,10 +23,11 @@ namespace Genny
         public GennyScaffoldingResult Scaffold(String path, Object model)
         {
             GennyRazorHost host = new GennyRazorHost(RootPath);
+            String viewPath = Path.GetExtension(path) != ".cshtml" ? $"{path}.cshtml" : path;
 
-            using (Stream input = File.OpenRead(Path.Combine(RootPath, path)))
+            using (Stream input = File.OpenRead(Path.Combine(RootPath, viewPath)))
             {
-                GeneratorResults results = host.GenerateCode(path, input);
+                GeneratorResults results = host.GenerateCode(viewPath, input);
                 if (!results.Success) return new GennyScaffoldingResult(results.ParserErrors.Select(error => error.ToString()));
 
                 GennyCompilationResult result = Compiler.Compile(results.GeneratedCode);

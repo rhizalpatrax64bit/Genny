@@ -49,7 +49,7 @@ namespace Project.Templates.Default
 
         public override void Run()
         {
-            GennyScaffoldingResult result = Scaffolder.Scaffold("Main/Class.cshtml", this);
+            GennyScaffoldingResult result = Scaffolder.Scaffold("Main/Class", this);
 
             TryWrite($"Controls/{ClassName}.cs", result);
         }
