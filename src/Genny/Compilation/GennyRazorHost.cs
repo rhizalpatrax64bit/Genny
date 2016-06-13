@@ -1,25 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Directives;
-using Microsoft.AspNetCore.Razor;
+using Microsoft.AspNetCore.Razor.Chunks;
 using Microsoft.AspNetCore.Razor.CodeGenerators;
 using Microsoft.AspNetCore.Razor.Parser;
+using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
+using Microsoft.Extensions.FileProviders;
 using System;
+using System.Collections.Generic;
 
 namespace Genny
 {
-    public class GennyRazorHost : RazorEngineHost
+    public class GennyRazorHost : MvcRazorHost
     {
-        public GennyRazorHost() : base(new CSharpRazorCodeLanguage())
+        public override IReadOnlyList<Chunk> DefaultInheritedChunks
         {
-            DefaultNamespace = "Genny.Templates";
-            GeneratedClassContext = new GeneratedClassContext("ExecuteAsync", "Write", "WriteLiteral", new GeneratedTagHelperContext());
-
-            NamespaceImports.Add("System");
-            NamespaceImports.Add("System.Linq");
-            NamespaceImports.Add("System.Threading.Tasks");
-            NamespaceImports.Add("System.Collections.Generic");
+            get
+            {
+                return new List<Chunk>().AsReadOnly();
+            }
         }
-   
+
+        public GennyRazorHost(String rootPath)
+            : base(new DefaultChunkTreeCache(new PhysicalFileProvider(rootPath)), new TagHelperDescriptorResolver(false))
+        {
+            EnableInstrumentation = false;
+            DefaultNamespace = "Genny.Templates";
+            GeneratedClassContext = GeneratedClassContext.Default;
+        }
+
         public override CodeGenerator DecorateCodeGenerator(CodeGenerator incomingGenerator, CodeGeneratorContext context)
         {
             String modelType = ChunkHelper.GetModelTypeName(context.ChunkTreeBuilder.Root, "dynamic");

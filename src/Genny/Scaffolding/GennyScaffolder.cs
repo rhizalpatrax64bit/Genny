@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor;
-using Microsoft.AspNetCore.Razor.CodeGenerators;
+﻿using Microsoft.AspNetCore.Razor.CodeGenerators;
 using System;
 using System.IO;
 using System.Linq;
@@ -23,10 +22,11 @@ namespace Genny
         }
         public GennyScaffoldingResult Scaffold(String path, Object model)
         {
-            RazorTemplateEngine engine = new RazorTemplateEngine(new GennyRazorHost());
-            using (StringReader input = new StringReader(File.ReadAllText(Path.Combine(RootPath, path))))
+            GennyRazorHost host = new GennyRazorHost(RootPath);
+
+            using (Stream input = File.OpenRead(Path.Combine(RootPath, path)))
             {
-                GeneratorResults results = engine.GenerateCode(input);
+                GeneratorResults results = host.GenerateCode(path, input);
                 if (!results.Success) return new GennyScaffoldingResult(results.ParserErrors.Select(error => error.ToString()));
 
                 GennyCompilationResult result = Compiler.Compile(results.GeneratedCode);
