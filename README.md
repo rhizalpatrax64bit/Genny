@@ -1,20 +1,17 @@
 Code generator for DotNet projects.
 
-This project is currently in development.
-
 # Installation
 
 Add genny dependencies to `project.json`:
 
 ```JSON
 "dependencies": {
-  "Genny": "0.9.5"
+  "Genny": "1.0.0"
 }
 
 "tools": {
   "Genny": {
-    "version": "0.9.5",
-    "imports": "portable-451"
+    "version": "1.0.0"
   }
 }
 ```
