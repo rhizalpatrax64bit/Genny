@@ -8,13 +8,10 @@ namespace Genny
         public String Content { get; set; }
         public IEnumerable<String> Errors { get; set; }
 
-        public GennyScaffoldingResult()
-        {
-            Errors = new String[0];
-        }
-        public GennyScaffoldingResult(String content) : this()
+        public GennyScaffoldingResult(String content)
         {
             Content = content;
+            Errors = new String[0];
         }
         public GennyScaffoldingResult(IEnumerable<String> erorrs)
         {

@@ -78,8 +78,7 @@ namespace Genny
         }
         private void ShowAvailableModules()
         {
-            IGennyModuleLocator locator = ServiceProvider.GetService<IGennyModuleLocator>();
-            IEnumerable<GennyModuleDescriptor> descriptors = locator.FindAll();
+            IEnumerable<GennyModuleDescriptor> descriptors = Locator.FindAll();
 
             if (descriptors.Any())
             {

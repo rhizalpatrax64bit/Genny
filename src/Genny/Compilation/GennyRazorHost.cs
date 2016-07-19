@@ -28,14 +28,14 @@ namespace Genny
             GeneratedClassContext = GeneratedClassContext.Default;
         }
 
-        public override CodeGenerator DecorateCodeGenerator(CodeGenerator incomingGenerator, CodeGeneratorContext context)
+        public override CodeGenerator DecorateCodeGenerator(CodeGenerator generator, CodeGeneratorContext context)
         {
-            String modelType = ChunkHelper.GetModelTypeName(context.ChunkTreeBuilder.Root, "dynamic");
-            DefaultBaseClass = $"Genny.GennyTemplate<{modelType}>";
+            String type = ChunkHelper.GetModelTypeName(context.ChunkTreeBuilder.Root, "dynamic");
+            DefaultBaseClass = $"Genny.GennyTemplate<{type}>";
 
-            return base.DecorateCodeGenerator(incomingGenerator, context);
+            return base.DecorateCodeGenerator(generator, context);
         }
-        public override ParserBase DecorateCodeParser(ParserBase incomingCodeParser)
+        public override ParserBase DecorateCodeParser(ParserBase parser)
         {
             return new MvcRazorCodeParser();
         }

@@ -22,21 +22,20 @@ namespace Genny
         }
         public GennyScaffoldingResult Scaffold(String path, Object model)
         {
-            GennyRazorHost host = new GennyRazorHost(RootPath);
-            String viewPath = Path.GetExtension(path) != ".cshtml" ? $"{path}.cshtml" : path;
+            path = Path.GetExtension(path) != ".cshtml" ? $"{path}.cshtml" : path;
 
-            using (Stream input = File.OpenRead(Path.Combine(RootPath, viewPath)))
+            using (Stream input = File.OpenRead(Path.Combine(RootPath, path)))
             {
-                GeneratorResults results = host.GenerateCode(viewPath, input);
-                if (!results.Success) return new GennyScaffoldingResult(results.ParserErrors.Select(error => error.ToString()));
+                GeneratorResults generation = new GennyRazorHost(RootPath).GenerateCode(path, input);
+                if (!generation.Success) return new GennyScaffoldingResult(generation.ParserErrors.Select(error => error.ToString()));
 
-                GennyCompilationResult result = Compiler.Compile(results.GeneratedCode);
-                if (result.Errors.Any()) return new GennyScaffoldingResult(result.Errors);
+                GennyCompilationResult compilation = Compiler.Compile(generation.GeneratedCode);
+                if (compilation.Errors.Any()) return new GennyScaffoldingResult(compilation.Errors);
 
-                Object gennyTemplate = Activator.CreateInstance(result.CompiledType);
-                MethodInfo execute = gennyTemplate.GetType().GetMethod("Execute");
+                Object template = Activator.CreateInstance(compilation.CompiledType);
+                MethodInfo execute = template.GetType().GetMethod("Execute");
 
-                return new GennyScaffoldingResult(execute.Invoke(gennyTemplate, new[] { model }) as String);
+                return new GennyScaffoldingResult(execute.Invoke(template, new[] { model }) as String);
             }
         }
     }
