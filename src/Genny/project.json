@@ -6,11 +6,10 @@
     "tags": [ "dotnet scaffolding" ]
   },
   "authors": [ "Muchiachio" ],
-  "version": "1.0.0",
+  "version": "1.0.0-preview2-final",
 
   "dependencies": {
     "Microsoft.AspNetCore.Mvc.Razor": "1.0.0",
-    "Microsoft.DotNet.ProjectModel": "1.0.0-rc3-003121",
     "Microsoft.Extensions.PlatformAbstractions": "1.0.0",
     "Microsoft.DotNet.Cli.Utils": "1.0.0-preview2-003121"
   },
@@ -22,7 +21,7 @@
   },
 
   "frameworks": {
-    "net451": { },
+    "net451": {},
     "netcoreapp1.0": {
       "dependencies": {
         "System.Runtime.Loader": "4.0.0",

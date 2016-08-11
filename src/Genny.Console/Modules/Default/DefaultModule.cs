@@ -22,7 +22,7 @@ namespace Genny.Modules
 
         public override void Run()
         {
-            GennyScaffoldingResult result = Scaffolder.Scaffold("Controls/Class", this);
+            GennyScaffoldingResult result = Scaffolder.Scaffold("Modules/Default/Controls/Class", this);
 
             TryWrite($"Controls/{ClassName}.cs", result);
         }

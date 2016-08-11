@@ -17,14 +17,6 @@ namespace Genny
             Application = provider.GetRequiredService<GennyApplication>();
             Scaffolder = provider.GetService<IGennyScaffolder>();
             Logger = provider.GetService<IGennyLogger>();
-            Scaffolder.RootPath = FindModuleRoot();
-        }
-        private String FindModuleRoot()
-        {
-            String[] files = Directory.GetFiles(Application.BasePath, GetType().Name + ".cs", SearchOption.AllDirectories);
-            if (files.Length != 1) return null;
-
-            return Path.GetDirectoryName(files[0]);
         }
 
         public abstract void Run();

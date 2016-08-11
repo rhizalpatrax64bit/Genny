@@ -1,10 +1,10 @@
 {
   "description": "Genny test console",
   "authors": [ "Muchiachio" ],
-  "version": "1.0.0",
+  "version": "1.0.0-preview2-final",
 
   "dependencies": {
-    "Genny": "1.0.0"
+    "Genny": "1.0.0-preview2-final"
   },
 
   "buildOptions": {
@@ -13,7 +13,7 @@
   },
 
   "frameworks": {
-    "net451": { },
+    "net451": {},
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {

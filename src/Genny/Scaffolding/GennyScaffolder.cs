@@ -8,11 +8,12 @@ namespace Genny
 {
     public class GennyScaffolder : IGennyScaffolder
     {
-        public String RootPath { get; set; }
         private IGennyCompiler Compiler { get; }
+        private GennyApplication Application { get; }
 
-        public GennyScaffolder(IGennyCompiler compiler)
+        public GennyScaffolder(GennyApplication application, IGennyCompiler compiler)
         {
+            Application = application;
             Compiler = compiler;
         }
 
@@ -24,9 +25,9 @@ namespace Genny
         {
             path = Path.GetExtension(path) != ".cshtml" ? $"{path}.cshtml" : path;
 
-            using (Stream input = File.OpenRead(Path.Combine(RootPath, path)))
+            using (Stream input = File.OpenRead(Path.Combine(Application.BasePath, path)))
             {
-                GeneratorResults generation = new GennyRazorHost(RootPath).GenerateCode(path, input);
+                GeneratorResults generation = new GennyRazorHost(Application.BasePath).GenerateCode(path, input);
                 if (!generation.Success) return new GennyScaffoldingResult(generation.ParserErrors.Select(error => error.ToString()));
 
                 GennyCompilationResult compilation = Compiler.Compile(generation.GeneratedCode);
