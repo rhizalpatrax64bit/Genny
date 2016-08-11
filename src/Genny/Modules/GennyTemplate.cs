@@ -31,5 +31,22 @@ namespace Genny
         {
             Output.Write(value ?? "");
         }
+
+        public void BeginWriteAttribute(String name, String prefix, Int32 prefixOffset,
+            String suffix, Int32 suffixOffset, Int32 attributeValuesCount)
+        {
+            Suffix = suffix;
+
+            Output.Write(prefix);
+        }
+        public void WriteAttributeValue(String prefix, Int32 prefixOffset, Object value,
+            Int32 valueOffset, Int32 valueLength, Boolean isLiteral)
+        {
+            Output.Write(value);
+        }
+        public void EndWriteAttribute()
+        {
+            Output.Write(Suffix);
+        }
     }
 }
