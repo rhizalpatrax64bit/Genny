@@ -26,6 +26,7 @@ namespace Genny
                     new GennyModuleDescriptor
                     {
                         Type = type,
+                        FullName = ToKebabCase(type.FullName),
                         Description = type.GetTypeInfo().GetCustomAttribute<GennyModuleDescriptorAttribute>()?.Description,
                         Name = ToKebabCase(type.GetTypeInfo().GetCustomAttribute<GennyAliasAttribute>()?.Value ?? type.Name)
                     })
@@ -38,11 +39,12 @@ namespace Genny
                 .Load(new AssemblyName(ApplicationName))
                 .GetTypes()
                 .Where(type =>
-                    IsModuleMatch(type, moduleName))
+                    IsModuleMatch(type, ToKebabCase(moduleName)))
                 .Select(type =>
                     new GennyModuleDescriptor
                     {
                         Type = type,
+                        FullName = ToKebabCase(type.FullName),
                         Description = type.GetTypeInfo().GetCustomAttribute<GennyModuleDescriptorAttribute>()?.Description,
                         Name = ToKebabCase(type.GetTypeInfo().GetCustomAttribute<GennyAliasAttribute>()?.Value ?? type.Name)
                     })
@@ -55,24 +57,24 @@ namespace Genny
             if (!typeof(IGennyModule).IsAssignableFrom(type))
                 return false;
 
-            if (String.Equals(type.Name, name, StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            if (String.Equals(type.FullName, name, StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            if (String.Equals(ToKebabCase(type.Name), name, StringComparison.OrdinalIgnoreCase))
+            if (ToKebabCase(type.Name).Equals(name, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             String alias = type.GetTypeInfo().GetCustomAttribute<GennyAliasAttribute>(false)?.Value;
-            if (alias != null && String.Equals(ToKebabCase(alias), name, StringComparison.OrdinalIgnoreCase))
+            if (alias != null && ToKebabCase(alias).Equals(name, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (ToKebabCase(type.FullName).EndsWith(name, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (alias != null && ToKebabCase(type.Namespace + "." + alias).EndsWith(name, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             return false;
         }
-        private String ToKebabCase(String typeName)
+        private String ToKebabCase(String value)
         {
-            return String.Join("-", Regex.Split(typeName, @"(?<!^)(?=[A-Z])").Select(name => name)).ToLower();
+            return String.Join("-", Regex.Split(value, @"(?<!^)(?<=[A-Za-z0-9])(?=[A-Z])")).ToLower();
         }
     }
 }

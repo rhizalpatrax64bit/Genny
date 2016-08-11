@@ -64,8 +64,9 @@ namespace Genny
 
                         break;
                     default:
-                        Logger.Write($"Found more than one genny module named: {moduleName}");
-                        ShowAvailableModules();
+                        Logger.Write($"Found more than one genny module named: {moduleName}, try using longer identifiers");
+                        foreach (GennyModuleDescriptor descriptor in descriptors)
+                            Logger.Write($"    {descriptor.FullName} - {descriptor.Description ?? "{No description}"}");
 
                         break;
                 }
