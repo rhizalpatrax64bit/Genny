@@ -6,12 +6,12 @@ Add genny dependencies to `project.json`:
 
 ```JSON
 "dependencies": {
-  "Genny": "1.0.0"
+  "Genny": "1.0.0-preview2-final"
 }
 
 "tools": {
   "Genny": {
-    "version": "1.0.0"
+    "version": "1.0.0-preview2-final"
   }
 }
 ```
@@ -46,7 +46,7 @@ namespace Project.Templates.Default
 
         public override void Run()
         {
-            GennyScaffoldingResult result = Scaffolder.Scaffold("Main/Class", this);
+            GennyScaffoldingResult result = Scaffolder.Scaffold("GennyModules/Default/Main/Class", this);
 
             TryWrite($"Controls/{ClassName}.cs", result);
         }
