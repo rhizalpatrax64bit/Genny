@@ -44,7 +44,7 @@ namespace Genny
                     return new GennyCompilationResult(errors);
                 }
 
-#if NET451
+#if NET46
                 return new GennyCompilationResult(Assembly.Load(peStream.ToArray()).ExportedTypes.First());
 #else
                 return new GennyCompilationResult(System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(peStream).ExportedTypes.First());
