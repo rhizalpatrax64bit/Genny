@@ -1,18 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5E4692F1-A3B6-4B40-9973-405AA503868C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{55B5321B-ECC5-48B1-A8B8-7F5EDF2D837C}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genny", "src\Genny\Genny.csproj", "{8897C398-83D8-4D83-88F7-33303F183B84}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Genny", "src\Genny\Genny.xproj", "{8897C398-83D8-4D83-88F7-33303F183B84}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Genny.Console", "src\Genny.Console\Genny.Console.xproj", "{5050BEC9-90A5-489C-BA14-EDC1557830B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Genny.Console", "src\Genny.Console\Genny.Console.csproj", "{5050BEC9-90A5-489C-BA14-EDC1557830B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

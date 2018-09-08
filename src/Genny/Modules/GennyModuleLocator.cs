@@ -8,17 +8,17 @@ namespace Genny
 {
     public class GennyModuleLocator : IGennyModuleLocator
     {
-        private String ApplicationName { get; }
+        private GennyApplication Application { get; }
 
         public GennyModuleLocator(GennyApplication application)
         {
-            ApplicationName = application.Name;
+            Application = application;
         }
 
         public IEnumerable<GennyModuleDescriptor> FindAll()
         {
-            return Assembly
-                .Load(new AssemblyName(ApplicationName))
+            return Application
+                .Assembly
                 .GetTypes()
                 .Where(type =>
                     typeof(IGennyModule).IsAssignableFrom(type))
@@ -35,8 +35,8 @@ namespace Genny
         }
         public IEnumerable<GennyModuleDescriptor> Find(String moduleName)
         {
-            return Assembly
-                .Load(new AssemblyName(ApplicationName))
+            return Application
+                .Assembly
                 .GetTypes()
                 .Where(type =>
                     IsModuleMatch(type, ToKebabCase(moduleName)))

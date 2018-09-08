@@ -2,18 +2,24 @@ Code generator for DotNet projects.
 
 # Installation
 
-Add genny dependencies to `project.json`:
+Install genny dependencies:
 
-```JSON
-"dependencies": {
-  "Genny": "1.0.0-preview2-final"
-}
+```XML
+<ItemGroup>
+  <PackageReference Include="Genny" Version="<version>" />
+</ItemGroup>
 
-"tools": {
-  "Genny": {
-    "version": "1.0.0-preview2-final"
-  }
-}
+<ItemGroup>
+  <DotNetCliToolReference Include="Genny" Version="<version>" />
+</ItemGroup>
+```
+
+Make sure compilation assemblies are preserved
+```XML
+<PropertyGroup>
+  <PreserveCompilationContext>true</PreserveCompilationContext>
+  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+</PropertyGroup>
 ```
 
 # Example usage
@@ -26,9 +32,9 @@ using System;
 
 namespace Project.Templates.Default
 {
-    [GennyAlias("Default")]
+    [GennyAlias("console-project")]
     [GennyModuleDescriptor("An example module")]
-    public class DefaultModule : GennyModule
+    public class ConsoleProjectModule : GennyModule
     {
         [GennyParameter(0, Required = true)]
         public String ClassName { get; set; }
@@ -39,26 +45,26 @@ namespace Project.Templates.Default
         [GennyParameter("namespace", "n")]
         public String Namespace { get; set; }
 
-        public DefaultModule(IServiceProvider provider)
+        public ConsoleProjectModule(IServiceProvider provider)
             : base(provider)
         {
         }
 
         public override void Run()
         {
-            GennyScaffoldingResult result = Scaffolder.Scaffold("GennyModules/Default/Main/Class", this);
+            GennyScaffoldingResult result = Scaffolder.Scaffold("Modules/ConsoleProject/Classes/Entry", this);
 
-            TryWrite($"Controls/{ClassName}.cs", result);
+            TryWrite($"TestConsole/{ClassName}.cs", result);
         }
 
-        public override void ShowHelp(IGennyLogger logger)
+        public override void ShowHelp()
         {
-            logger.Write("Parameters:");
-            logger.Write("    1 - Scaffolded class name.");
-            logger.Write("    2 - Scaffolded method name.");
+            Logger.WriteLine("Parameters:");
+            Logger.WriteLine("    1 - Scaffolded class name.");
+            Logger.WriteLine("    2 - Scaffolded method name.");
 
-            logger.Write("Named parameters:");
-            logger.Write("    -n|--namespace  - Scaffolded class namespace.");
+            Logger.WriteLine("Named parameters:");
+            Logger.WriteLine("    -n|--namespace  - Scaffolded class namespace.");
         }
     }
 }
@@ -69,24 +75,25 @@ Which scaffolds templates from module's folder
 Project
 ├── README.md                       <----- Unrelated project files
 ├── ...
-├── ...
-├── ...   
 │
-└───GennyModules
-    ├───Default                     <----- Default module folder
-    │   ├── Main                    <----- Default module template's folder
-    │   │   └── Class.cshtml        <----- Default module template
-    |   └── DefaultModule.cs        <----- Default module class
-    │   
-    ├───Advanced                    <----- Other unrelated modules
-    │   ├── AdvancedClass.cs.cshtml
-    │   │   ...
+└───Modules
+    ├─── ConsoleProject              <----- Module root
+    │    ├── Classes
+    │    │   └── Entry.cshtml        <----- Module templates
+    |    └── ConsoleProjectModule.cs <----- Module entry point
+    │
+    ├─── _ViewImports.cshtml         <----- Optional imports for module templates
+    |
+    ├─── Advanced                    <----- Other module roots
+    │    ├── AdvancedClass.cs.cshtml
+    │    ├── ...
 ```
 
 Run your module from command line, by navigating to the project directory and running
 
 ```
-dotnet gen default Main Run -n Project.Controls
+dotnet build
+dotnet gen console-project Program Main -n TestProject
 ```
 
 Which results in project structure
@@ -97,12 +104,12 @@ Project
 ├── ...
 ├── ...
 |
-├── Controls
-│   └── Main.cs
+├── TestConsole
+│   └── Program.cs
 |
 ├── ...
 |
-└───GennyModules
+└───Modules
     ├─── ...
     ├─── ...
     |

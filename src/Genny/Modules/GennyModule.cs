@@ -17,27 +17,38 @@ namespace Genny
             Application = provider.GetRequiredService<GennyApplication>();
             Scaffolder = provider.GetService<IGennyScaffolder>();
             Logger = provider.GetService<IGennyLogger>();
+            Scaffolder.ModuleRootPath = FindModuleRoot();
         }
 
-        public abstract void Run();
-        public virtual void ShowHelp(IGennyLogger logger)
+        private String FindModuleRoot()
         {
-            logger.Write("    Help is not available for this module.");
+            String[] files = Directory.GetFiles(Application.BasePath, GetType().Name + ".cs", SearchOption.AllDirectories);
+
+            return files.Length == 1 ? Path.GetDirectoryName(files[0]) : null;
+        }
+        public abstract void Run();
+        public virtual void ShowHelp()
+        {
+            Logger.WriteLine("    Help is not available for this module.");
         }
 
         protected virtual void Write(String path, GennyScaffoldingResult result)
         {
             if (result.Errors.Any())
             {
-                Logger.Write($"{path} - Failed");
+                Logger.Write($"{path} - ");
+                Logger.WriteLine("Failed", ConsoleColor.Red);
+
                 foreach (String error in result.Errors)
-                    Logger.Write($"  - {error}");
+                    Logger.WriteLine($"  - {error}");
             }
             else
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 File.WriteAllText(path, result.Content);
-                Logger.Write($"{path} - Succeeded");
+
+                Logger.Write($"{path} - ");
+                Logger.WriteLine("Succeeded", ConsoleColor.Green);
             }
         }
         protected virtual void Write(IDictionary<String, GennyScaffoldingResult> results)
@@ -49,7 +60,10 @@ namespace Genny
         protected virtual void TryWrite(String path, GennyScaffoldingResult result)
         {
             if (File.Exists(path))
-                Logger.Write($"{path} - Already exists, skipping...");
+            {
+                Logger.Write($"{path} - ");
+                Logger.WriteLine("Already exists, skipping...", ConsoleColor.Yellow);
+            }
             else
                 Write(path, result);
         }

@@ -6,18 +6,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Reflection.PortableExecutable;
+using System.Runtime.Loader;
 
 namespace Genny
 {
     public class GennyCompiler : IGennyCompiler
     {
         private DependencyContext Context { get; }
+        private GennyApplication Application { get; }
 
         public GennyCompiler(GennyApplication application)
         {
-            Context = DependencyContext.Load(Assembly.Load(new AssemblyName(application.Name)));
+            Application = application;
+            Context = DependencyContext.Load(application.Assembly);
         }
 
         public GennyCompilationResult Compile(String code)
@@ -44,21 +46,23 @@ namespace Genny
                     return new GennyCompilationResult(errors);
                 }
 
-#if NET46
-                return new GennyCompilationResult(Assembly.Load(peStream.ToArray()).ExportedTypes.First());
-#else
-                return new GennyCompilationResult(System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(peStream).ExportedTypes.First());
-#endif
+                return new GennyCompilationResult(AssemblyLoadContext.Default.LoadFromStream(peStream).ExportedTypes.First());
             }
         }
 
         private IEnumerable<MetadataReference> GetReferences()
         {
+            String assemblyFolder = Path.GetDirectoryName(Application.Assembly.Location);
             List<MetadataReference> references = new List<MetadataReference>();
+
             foreach (CompilationLibrary library in Context.CompileLibraries)
             {
                 try
                 {
+                    if (library.Type == "project")
+                        foreach (String assembly in library.Assemblies)
+                            references.Add(MetadataReference.CreateFromFile(Path.Combine(assemblyFolder, assembly)));
+
                     references.AddRange(library.ResolveReferencePaths().Select(GetReference));
                 }
                 catch (InvalidOperationException)

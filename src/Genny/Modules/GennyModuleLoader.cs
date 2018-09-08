@@ -86,7 +86,7 @@ namespace Genny
                 if (valueIndex <= 0)
                     valueIndex = Array.IndexOf(args, "-" + parameter.ShortName) + 1;
             }
-        
+
             if (valueIndex < 0)
                 return null;
 

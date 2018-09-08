@@ -4,6 +4,6 @@
     {
         void Run();
 
-        void ShowHelp(IGennyLogger logger);
+        void ShowHelp();
     }
 }

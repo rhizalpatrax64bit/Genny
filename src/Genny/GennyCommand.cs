@@ -12,11 +12,11 @@ namespace Genny
         private IGennyModuleLocator Locator { get; }
         private GennyServiceProvider ServiceProvider { get; }
 
-        public GennyCommand(GennyApplication application)
+        public GennyCommand()
         {
             ServiceProvider = new GennyServiceProvider();
 
-            ServiceProvider.Add(application);
+            ServiceProvider.Add(new GennyApplication());
             ServiceProvider.Add<IGennyLogger, GennyLogger>();
             ServiceProvider.Add<IGennyCompiler, GennyCompiler>();
             ServiceProvider.Add<IGennyScaffolder, GennyScaffolder>();
@@ -44,7 +44,7 @@ namespace Genny
                 switch (descriptors.Length)
                 {
                     case 0:
-                        Logger.Write($"Could not find a genny module named: {moduleName}");
+                        Logger.WriteLine($"Could not find a genny module named: {moduleName}", ConsoleColor.Red);
                         ShowAvailableModules();
 
                         break;
@@ -53,9 +53,9 @@ namespace Genny
                         if (result.Errors.Any())
                         {
                             foreach (String error in result.Errors)
-                                Logger.Write(error);
+                                Logger.WriteLine(error, ConsoleColor.Red);
 
-                            result.Module.ShowHelp(Logger);
+                            result.Module.ShowHelp();
                         }
                         else
                         {
@@ -64,9 +64,9 @@ namespace Genny
 
                         break;
                     default:
-                        Logger.Write($"Found more than one genny module named: {moduleName}, try using longer identifiers");
+                        Logger.WriteLine($"Found more than one genny module named: {moduleName}, try using longer identifiers");
                         foreach (GennyModuleDescriptor descriptor in descriptors)
-                            Logger.Write($"    {descriptor.FullName} - {descriptor.Description ?? "{No description}"}");
+                            Logger.WriteLine($"    {descriptor.FullName} - {descriptor.Description ?? "{No description}"}");
 
                         break;
                 }
@@ -83,18 +83,18 @@ namespace Genny
 
             if (descriptors.Any())
             {
-                Logger.Write("Available genny modules:");
+                Logger.WriteLine("Available genny modules:");
                 foreach (GennyModuleDescriptor descriptor in descriptors)
-                    Logger.Write($"    {descriptor.Name} - {descriptor.Description ?? "{No description}"}");
+                    Logger.WriteLine($"    {descriptor.Name} - {descriptor.Description ?? "{No description}"}");
             }
             else
             {
-                Logger.Write("There are no genny modules installed!");
+                Logger.WriteLine("There are no genny modules installed!", ConsoleColor.Red);
             }
         }
         private void ShowHelp()
         {
-            Logger.Write("Usage: dotnet gen <genny command name> <genny module name> [genny module parameters]");
+            Logger.WriteLine("Usage: dotnet gen <module name> [module parameters]");
         }
     }
 }
