@@ -92,7 +92,7 @@ Project
 Run your module from command line, by navigating to the project directory and running
 
 ```
-dotnet build
+dotnet build (only first time)
 dotnet gen console-project Program Main -n TestProject
 ```
 
