@@ -50,7 +50,12 @@ namespace Genny
                         break;
                     case 1:
                         GennyModuleLoaderResult result = Loader.Load(descriptors[0], moduleArgs);
-                        if (result.Errors.Any())
+
+                        if (ShowHelpFor(moduleArgs))
+                        {
+                            result.Module.ShowHelp();
+                        }
+                        else if (result.Errors.Any())
                         {
                             foreach (String error in result.Errors)
                                 Logger.WriteLine(error, ConsoleColor.Red);
@@ -75,7 +80,7 @@ namespace Genny
 
         private Boolean ShowHelpFor(String[] args)
         {
-            return args.Length == 0 || new[] { "-?", "-h", "--help" }.Contains(args.FirstOrDefault());
+            return args.Length == 1 && new[] { "-?", "-h", "--help" }.Contains(args[0]);
         }
         private void ShowAvailableModules()
         {
