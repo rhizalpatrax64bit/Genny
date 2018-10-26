@@ -30,7 +30,7 @@ namespace Genny
 
             using (Stream input = File.OpenRead(path))
             {
-                RazorSourceDocument source = RazorSourceDocument.Create(File.ReadAllText(path), "Template");
+                RazorSourceDocument source = RazorSourceDocument.Create(File.ReadAllText(path), "");
                 RazorCodeDocument document = RazorCodeDocument.Create(source, GetTemplateImports());
                 RazorProjectEngine.Create(RazorConfiguration.Default, RazorProjectFileSystem.Create(Application.BasePath), builder =>
                 {
