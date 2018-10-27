@@ -65,7 +65,9 @@ namespace Genny
                 Logger.WriteLine("Already exists, skipping...", ConsoleColor.Yellow);
             }
             else
+            {
                 Write(path, result);
+            }
         }
         protected virtual void TryWrite(IDictionary<String, GennyScaffoldingResult> results)
         {
