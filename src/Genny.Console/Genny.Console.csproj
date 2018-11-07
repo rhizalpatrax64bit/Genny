@@ -10,11 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Genny" Version="2.1.0" />
+    <PackageReference Include="Genny" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Genny" Version="2.1.0" />
+    <DotNetCliToolReference Include="Genny" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
