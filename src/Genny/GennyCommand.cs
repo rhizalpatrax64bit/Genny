@@ -30,7 +30,7 @@ namespace Genny
 
         public void Execute(String[] args)
         {
-            if (ShowHelpFor(args))
+            if (args.Length == 0 || ShowHelpFor(args))
             {
                 ShowHelp();
                 ShowAvailableModules();
