@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>2.2.1</Version>
+    <Version>2.3.0</Version>
     <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -10,11 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Genny" Version="2.2.1" />
+    <PackageReference Include="Genny" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Genny" Version="2.2.1" />
+    <DotNetCliToolReference Include="Genny" Version="2.3.0" />
   </ItemGroup>
 
 </Project>

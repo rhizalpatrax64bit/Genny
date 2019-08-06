@@ -14,14 +14,6 @@ Install genny dependencies:
 </ItemGroup>
 ```
 
-Make sure compilation assemblies are preserved
-```XML
-<PropertyGroup>
-  <PreserveCompilationContext>true</PreserveCompilationContext>
-  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-</PropertyGroup>
-```
-
 # Example usage
 
 Implement `GennyModule`

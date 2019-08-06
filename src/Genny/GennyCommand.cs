@@ -60,6 +60,8 @@ namespace Genny
                             foreach (String error in result.Errors)
                                 Logger.WriteLine(error, ConsoleColor.Red);
 
+                            Logger.WriteLine("");
+
                             result.Module.ShowHelp();
                         }
                         else

@@ -9,7 +9,10 @@ namespace Genny
     public class GennyApplication
     {
         public String BasePath { get; set; }
+        public String Framework { get; set; }
         public Assembly Assembly { get; set; }
+        public String AssemblyName { get; set; }
+        public String AssemblyDirectory { get; set; }
 
         public GennyApplication()
         {
@@ -17,13 +20,15 @@ namespace Genny
             XDocument project = XDocument.Load(projectFile);
             BasePath = Directory.GetCurrentDirectory();
 
-            String framework = project.Descendants("TargetFrameworks").FirstOrDefault()?.Value.Split(':').First();
-            framework = framework ?? project.Descendants("TargetFramework").First().Value;
+            Framework = project.Descendants("TargetFrameworks").FirstOrDefault()?.Value.Split(':').First();
+            Framework = Framework ?? project.Descendants("TargetFramework").First().Value;
 
-            String assemblyName = project.Descendants("AssemblyName").FirstOrDefault()?.Value;
-            assemblyName = assemblyName ?? Path.GetFileNameWithoutExtension(projectFile);
+            AssemblyName = project.Descendants("AssemblyName").FirstOrDefault()?.Value;
+            AssemblyName = AssemblyName ?? Path.GetFileNameWithoutExtension(projectFile);
 
-            Assembly = Assembly.LoadFrom($"{BasePath}\\bin\\Debug\\{framework}\\{assemblyName}.dll");
+            AssemblyDirectory = $"{BasePath}\\bin\\Debug\\{Framework}";
+
+            Assembly = Assembly.LoadFrom($"{AssemblyDirectory}\\{AssemblyName}.dll");
         }
     }
 }
