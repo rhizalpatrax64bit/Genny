@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>2.3.0</Version>
+    <Version>2.3.1</Version>
     <OutputType>Exe</OutputType>
     <PackageId>Genny</PackageId>
     <AssemblyName>dotnet-gen</AssemblyName>
@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.Cli.Utils" Version="2.0.0" />
+    <PackageReference Include="Microsoft.DotNet.Cli.Utils" Version="2.0.0">
+      <IncludeAssets>compile</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.0" />
   </ItemGroup>

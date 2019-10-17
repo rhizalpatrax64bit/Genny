@@ -14,6 +14,20 @@ Install genny dependencies:
 </ItemGroup>
 ```
 
+If you are on net core 3.0+ make sure compilation references are preserved
+```XML
+<PropertyGroup>
+  <PreserveCompilationReferences>true</PreserveCompilationReferences>
+</PropertyGroup>
+```
+
+Console applications might need compilation context preserved
+```XML
+<PropertyGroup>
+  <PreserveCompilationContext>true</PreserveCompilationContext>
+</PropertyGroup>
+```
+
 # Example usage
 
 Implement `GennyModule`
