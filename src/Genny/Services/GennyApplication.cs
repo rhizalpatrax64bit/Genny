@@ -26,9 +26,9 @@ namespace Genny
             AssemblyName = project.Descendants("AssemblyName").FirstOrDefault()?.Value;
             AssemblyName = AssemblyName ?? Path.GetFileNameWithoutExtension(projectFile);
 
-            AssemblyDirectory = $"{BasePath}\\bin\\Debug\\{Framework}";
+            AssemblyDirectory = $"{BasePath}{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}Debug{Path.DirectorySeparatorChar}{Framework}";
 
-            Assembly = Assembly.LoadFrom($"{AssemblyDirectory}\\{AssemblyName}.dll");
+            Assembly = Assembly.LoadFrom($"{AssemblyDirectory}{Path.DirectorySeparatorChar}{AssemblyName}.dll");
         }
     }
 }
